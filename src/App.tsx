@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { FC, useState } from 'react';
+import axios from 'axios';
 
-function App() {
+const App: FC = () => {
+  const [message, setMessage] = useState('こんにちは');
+  const fetchMessage = () => {
+   axios
+    .get(`${process.env.REACT_APP_API_HOST}`)
+    .then(res => {
+      setMessage(res.data.message);
+    })
+    .catch(error => {
+      console.error(error);
+    })
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <React.Fragment>
+      <h1>{message}</h1>
+      <button onClick={fetchMessage}>Change message</button>
+    </React.Fragment>
+  )
 }
 
 export default App;
