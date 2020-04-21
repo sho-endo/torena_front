@@ -1,23 +1,27 @@
-import React, { FC, useState } from 'react';
-import axios from 'axios';
+import React, { FC } from 'react';
+import { Switch, Route, Redirect, Link } from 'react-router-dom';
+
+import Home from './Home';
+import About from './About';
 
 const App: FC = () => {
-  const [message, setMessage] = useState('こんにちは');
-  const fetchMessage = () => {
-   axios
-    .get(`${process.env.REACT_APP_API_HOST}`)
-    .then(res => {
-      setMessage(res.data.message);
-    })
-    .catch(error => {
-      console.error(error);
-    })
-  }
-
   return (
     <React.Fragment>
-      <h1>{message}</h1>
-      <button onClick={fetchMessage}>Change message</button>
+      <nav>
+        <ul>
+          <li>
+            <Link to='/'>Home</Link>
+          </li>
+          <li>
+            <Link to='/about'>About</Link>
+          </li>
+        </ul>
+      </nav>
+      <Switch>
+        <Route path='/about' component={About} />
+        <Route path='/' component={Home} />
+        <Redirect to='/' />
+      </Switch>
     </React.Fragment>
   )
 }
