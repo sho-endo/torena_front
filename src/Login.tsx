@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState, FormEvent, FC } from 'react';
+import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -43,8 +43,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LogIn() {
+type LoginProps = { setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>> }
+
+const Login: FC<LoginProps> = ({setIsLoggedIn}) => {
   const classes = useStyles();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const history = useHistory();
+
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    axios.post(`${process.env.REACT_APP_API_HOST}/login`, {
+      session: {
+        email: email,
+        password: password,
+      }
+    },
+    { withCredentials: true }
+    ).then(res => {
+      console.log('login success', res);
+      setIsLoggedIn(true);
+      history.push('/');
+    }).catch(error => {
+      console.log('login error', error)
+    });
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -67,6 +92,9 @@ export default function LogIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            value={email}
+            // TODO: アンチパターンらしいのであとで修正する（他のフォームも同じ）
+            onChange={e => { setEmail(e.target.value) }}
           />
           <TextField
             variant="outlined"
@@ -78,6 +106,8 @@ export default function LogIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={password}
+            onChange={e => { setPassword(e.target.value) }}
           />
           <Button
             type="submit"
@@ -85,6 +115,7 @@ export default function LogIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={handleSubmit}
           >
             ログイン
           </Button>
@@ -108,3 +139,5 @@ export default function LogIn() {
     </Container>
   );
 }
+
+export default Login;
