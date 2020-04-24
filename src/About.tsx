@@ -5,7 +5,7 @@ const About: FC = () => {
     <React.Fragment>
       <h1>Aboutページです</h1>
     </React.Fragment>
-  )
-}
+  );
+};
 
 export default About;

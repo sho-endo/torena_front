@@ -1,5 +1,5 @@
 import React, { FC, useState, FormEvent } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -46,9 +46,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type SignupProps = { setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>> }
+type SignupProps = {
+  isLoggedIn: boolean;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-const Signup: FC<SignupProps> = ({setIsLoggedIn}) => {
+const Signup: FC<SignupProps> = ({ isLoggedIn, setIsLoggedIn }) => {
   const classes = useStyles();
 
   const [email, setEmail] = useState('');
@@ -59,102 +62,119 @@ const Signup: FC<SignupProps> = ({setIsLoggedIn}) => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    axios.post(`${process.env.REACT_APP_API_HOST}/users`, {
-      user: {
-        email: email,
-        password: password,
-        password_confirmation: passwordConfirmation
-      }
-    },
-    { withCredentials: true }
-    ).then(res => {
-      console.log('signup success', res);
-      setIsLoggedIn(true);
-      history.push('/');
-    }).catch(error => {
-      console.log('signup error', error)
-    });
-  }
+    axios
+      .post(
+        `${process.env.REACT_APP_API_HOST}/users`,
+        {
+          user: {
+            email: email,
+            password: password,
+            password_confirmation: passwordConfirmation,
+          },
+        },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        console.log('signup success', res);
+        setIsLoggedIn(true);
+        history.push('/');
+      })
+      .catch((error) => {
+        console.log('signup error', error);
+      });
+  };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          新規登録
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
+    <React.Fragment>
+      {isLoggedIn ? (
+        <Redirect to={'/'} />
+      ) : (
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              新規登録
+            </Typography>
+            <form className={classes.form} noValidate>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email"
+                    name="email"
+                    autoComplete="email"
+                    value={email}
+                    // TODO: アンチパターンらしいのであとで修正する（他のフォームも同じ）
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="passwordConfirmation"
+                    label="Password Confirmation"
+                    type="password"
+                    id="passwordConfirmation"
+                    autoComplete="current-password"
+                    value={passwordConfirmation}
+                    onChange={(e) => {
+                      setPasswordConfirmation(e.target.value);
+                    }}
+                  />
+                </Grid>
+              </Grid>
+              <Button
+                type="submit"
                 fullWidth
-                id="email"
-                label="Email"
-                name="email"
-                autoComplete="email"
-                value={email}
-                // TODO: アンチパターンらしいのであとで修正する（他のフォームも同じ）
-                onChange={e => { setEmail(e.target.value) }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={e => { setPassword(e.target.value) }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="passwordConfirmation"
-                label="Password Confirmation"
-                type="password"
-                id="passwordConfirmation"
-                autoComplete="current-password"
-                value={passwordConfirmation}
-                onChange={e => { setPasswordConfirmation(e.target.value) }}
-              />
-            </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={handleSubmit}
-          >
-            Sign Up
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link href="#" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
-    </Container>
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={handleSubmit}
+              >
+                Sign Up
+              </Button>
+              <Grid container justify="flex-end">
+                <Grid item>
+                  <Link href="#" variant="body2">
+                    Already have an account? Sign in
+                  </Link>
+                </Grid>
+              </Grid>
+            </form>
+          </div>
+          <Box mt={5}>
+            <Copyright />
+          </Box>
+        </Container>
+      )}
+    </React.Fragment>
   );
-}
+};
 
-export default Signup
+export default Signup;
