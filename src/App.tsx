@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
-import { Switch, Route, Redirect, Link } from 'react-router-dom';
+import { Switch, Route, Redirect, Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 import Home from './Home';
@@ -10,6 +10,8 @@ import SignUp from './Signup';
 const App: FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const history = useHistory();
+
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_HOST}/logged_in`, { withCredentials: true })
@@ -17,6 +19,18 @@ const App: FC = () => {
         setIsLoggedIn(res.data.logged_in);
       });
   }, []);
+
+  const handleLogoutClick = () => {
+    axios
+      .delete(`${process.env.REACT_APP_API_HOST}/logout`, { withCredentials: true })
+      .then(res => {
+        console.log('Logout success!');
+        setIsLoggedIn(false);
+        history.push('/login');
+      }).catch(err => {
+        console.log('Logout falied', err);
+      });
+  }
 
   return (
     <React.Fragment>
@@ -33,6 +47,9 @@ const App: FC = () => {
           </li>
           <li>
             <Link to='/signup'>Signup</Link>
+          </li>
+          <li>
+            <button onClick={handleLogoutClick}>ログアウト</button>
           </li>
           <li>
             { isLoggedIn ? 'ログイン中です' : 'ログインしてません' }
