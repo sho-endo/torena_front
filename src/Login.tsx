@@ -46,9 +46,9 @@ const useStyles = makeStyles((theme) => ({
 type LoginProps = {
   isLoggedIn: boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-}
+};
 
-const Login: FC<LoginProps> = ({isLoggedIn, setIsLoggedIn}) => {
+const Login: FC<LoginProps> = ({ isLoggedIn, setIsLoggedIn }) => {
   const classes = useStyles();
 
   const [email, setEmail] = useState('');
@@ -58,93 +58,104 @@ const Login: FC<LoginProps> = ({isLoggedIn, setIsLoggedIn}) => {
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    axios.post(`${process.env.REACT_APP_API_HOST}/login`, {
-      session: {
-        email: email,
-        password: password,
-      }
-    },
-    { withCredentials: true }
-    ).then(res => {
-      console.log('login success', res);
-      setIsLoggedIn(true);
-      history.push('/');
-    }).catch(error => {
-      console.log('login error', error)
-    });
-  }
+    axios
+      .post(
+        `${process.env.REACT_APP_API_HOST}/login`,
+        {
+          session: {
+            email: email,
+            password: password,
+          },
+        },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        console.log('login success', res);
+        setIsLoggedIn(true);
+        history.push('/');
+      })
+      .catch((error) => {
+        console.log('login error', error);
+      });
+  };
 
   return (
     <React.Fragment>
-      { isLoggedIn ? <Redirect to={'/'} /> :
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            LOGIN
-          </Typography>
-          <form className={classes.form} noValidate>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              value={email}
-              // TODO: アンチパターンらしいのであとで修正する（他のフォームも同じ）
-              onChange={e => { setEmail(e.target.value) }}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={e => { setPassword(e.target.value) }}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={handleSubmit}
-            >
-              ログイン
-            </Button>
-            <Grid container justify='center'>
-              {/* <Grid item xs>
+      {isLoggedIn ? (
+        <Redirect to={'/'} />
+      ) : (
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              LOGIN
+            </Typography>
+            <form className={classes.form} noValidate>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={email}
+                // TODO: アンチパターンらしいのであとで修正する（他のフォームも同じ）
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={handleSubmit}
+              >
+                ログイン
+              </Button>
+              <Grid container justify="center">
+                {/* <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
               </Grid> */}
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"アカウントをお持ちでない方はこちら"}
-                </Link>
+                <Grid item>
+                  <Link href="#" variant="body2">
+                    {'アカウントをお持ちでない方はこちら'}
+                  </Link>
+                </Grid>
               </Grid>
-            </Grid>
-          </form>
-        </div>
-        <Box mt={8}>
-          <Copyright />
-        </Box>
-      </Container>
-      }
+            </form>
+          </div>
+          <Box mt={8}>
+            <Copyright />
+          </Box>
+        </Container>
+      )}
     </React.Fragment>
   );
-}
+};
 
 export default Login;

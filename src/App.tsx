@@ -16,7 +16,7 @@ const App: FC = () => {
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_HOST}/logged_in`, { withCredentials: true })
-      .then(res => {
+      .then((res) => {
         setIsLoggedIn(res.data.logged_in);
       });
   }, []);
@@ -24,63 +24,58 @@ const App: FC = () => {
   const handleLogoutClick = () => {
     axios
       .delete(`${process.env.REACT_APP_API_HOST}/logout`, { withCredentials: true })
-      .then(res => {
+      .then((res) => {
         console.log('Logout success!');
         setIsLoggedIn(false);
         history.push('/login');
-      }).catch(err => {
+      })
+      .catch((err) => {
         console.log('Logout falied', err);
       });
-  }
+  };
 
   return (
     <React.Fragment>
       <nav>
         <ul>
           <li>
-            <Link to='/'>Home</Link>
+            <Link to="/">Home</Link>
           </li>
           <li>
-            <Link to='/about'>About</Link>
+            <Link to="/about">About</Link>
           </li>
           <li>
-            <Link to='/login'>Login</Link>
+            <Link to="/login">Login</Link>
           </li>
           <li>
-            <Link to='/signup'>Signup</Link>
+            <Link to="/signup">Signup</Link>
           </li>
           <li>
             <button onClick={handleLogoutClick}>ログアウト</button>
           </li>
-          <li>
-            { isLoggedIn ? 'ログイン中です' : 'ログインしてません' }
-          </li>
+          <li>{isLoggedIn ? 'ログイン中です' : 'ログインしてません'}</li>
         </ul>
       </nav>
-  
+
       <Switch>
         <Route
           exact
-          path='/login'
-          render={() => (
-            <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
-          )}
+          path="/login"
+          render={() => <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
         />
         <Route
           exact
-          path='/signup'
-          render={() => (
-            <SignUp isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
-          )}
+          path="/signup"
+          render={() => <SignUp isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
         />
         <Auth isLoggedIn={isLoggedIn}>
-          <Route path='/about' component={About} exact />
-          <Route path='/' component={Home} />
+          <Route path="/about" component={About} exact />
+          <Route path="/" component={Home} />
         </Auth>
-        <Redirect to='/' />
+        <Redirect to="/" />
       </Switch>
     </React.Fragment>
-  )
-}
+  );
+};
 
 export default App;
