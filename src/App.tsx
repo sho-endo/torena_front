@@ -63,14 +63,14 @@ const App: FC = () => {
           exact
           path='/login'
           render={() => (
-            <Login setIsLoggedIn={setIsLoggedIn}/>
+            <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
           )}
         />
         <Route
           exact
           path='/signup'
           render={() => (
-            <SignUp setIsLoggedIn={setIsLoggedIn}/>
+            <SignUp isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
           )}
         />
         <Auth isLoggedIn={isLoggedIn}>

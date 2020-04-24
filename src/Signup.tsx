@@ -1,5 +1,5 @@
 import React, { FC, useState, FormEvent } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -46,9 +46,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type SignupProps = { setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>> }
+type SignupProps = {
+  isLoggedIn: boolean;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-const Signup: FC<SignupProps> = ({setIsLoggedIn}) => {
+const Signup: FC<SignupProps> = ({isLoggedIn, setIsLoggedIn}) => {
   const classes = useStyles();
 
   const [email, setEmail] = useState('');
@@ -77,6 +80,8 @@ const Signup: FC<SignupProps> = ({setIsLoggedIn}) => {
   }
 
   return (
+    <React.Fragment>
+    { isLoggedIn ? <Redirect to={'/'} /> :
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
@@ -154,6 +159,8 @@ const Signup: FC<SignupProps> = ({setIsLoggedIn}) => {
         <Copyright />
       </Box>
     </Container>
+    }
+    </React.Fragment>
   );
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, FC } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -43,9 +43,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type LoginProps = { setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>> }
+type LoginProps = {
+  isLoggedIn: boolean;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-const Login: FC<LoginProps> = ({setIsLoggedIn}) => {
+const Login: FC<LoginProps> = ({isLoggedIn, setIsLoggedIn}) => {
   const classes = useStyles();
 
   const [email, setEmail] = useState('');
@@ -72,71 +75,75 @@ const Login: FC<LoginProps> = ({setIsLoggedIn}) => {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          LOGIN
-        </Typography>
-        <form className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={email}
-            // TODO: アンチパターンらしいのであとで修正する（他のフォームも同じ）
-            onChange={e => { setEmail(e.target.value) }}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={e => { setPassword(e.target.value) }}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={handleSubmit}
-          >
-            ログイン
-          </Button>
-          <Grid container justify='center'>
-            {/* <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid> */}
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"アカウントをお持ちでない方はこちら"}
-              </Link>
+    <React.Fragment>
+      { isLoggedIn ? <Redirect to={'/'} /> :
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            LOGIN
+          </Typography>
+          <form className={classes.form} noValidate>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={email}
+              // TODO: アンチパターンらしいのであとで修正する（他のフォームも同じ）
+              onChange={e => { setEmail(e.target.value) }}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={e => { setPassword(e.target.value) }}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={handleSubmit}
+            >
+              ログイン
+            </Button>
+            <Grid container justify='center'>
+              {/* <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid> */}
+              <Grid item>
+                <Link href="#" variant="body2">
+                  {"アカウントをお持ちでない方はこちら"}
+                </Link>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-    </Container>
+          </form>
+        </div>
+        <Box mt={8}>
+          <Copyright />
+        </Box>
+      </Container>
+      }
+    </React.Fragment>
   );
 }
 
