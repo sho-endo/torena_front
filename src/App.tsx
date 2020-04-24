@@ -6,6 +6,7 @@ import Home from './Home';
 import About from './About';
 import Login from './Login';
 import SignUp from './Signup';
+import Auth from './Auth';
 
 const App: FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -56,8 +57,8 @@ const App: FC = () => {
           </li>
         </ul>
       </nav>
+  
       <Switch>
-        <Route path='/about' component={About} exact />
         <Route
           exact
           path='/login'
@@ -72,7 +73,10 @@ const App: FC = () => {
             <SignUp setIsLoggedIn={setIsLoggedIn}/>
           )}
         />
-        <Route path='/' component={Home} />
+        <Auth isLoggedIn={isLoggedIn}>
+          <Route path='/about' component={About} exact />
+          <Route path='/' component={Home} />
+        </Auth>
         <Redirect to='/' />
       </Switch>
     </React.Fragment>
