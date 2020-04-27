@@ -59,7 +59,7 @@ const Login: FC<LoginProps> = ({ isLoggedIn, setIsLoggedIn }) => {
 
   const history = useHistory();
 
-  const { handleSubmit, register } = useForm<LoginFormData>();
+  const { handleSubmit, register, errors } = useForm<LoginFormData>();
 
   const handleOnSubmit = (data: LoginFormData) => {
     const { email, password } = data;
@@ -111,7 +111,15 @@ const Login: FC<LoginProps> = ({ isLoggedIn, setIsLoggedIn }) => {
                 name="email"
                 autoComplete="email"
                 autoFocus
-                inputRef={register}
+                inputRef={register({
+                  required: 'メールアドレスは必ず入力してください',
+                  pattern: {
+                    value: /^[\w+\-.]+@[a-z\d\-.]+\.[a-z]+$/,
+                    message: 'メールアドレスは正しい形式で入力してください',
+                  },
+                })}
+                error={!!errors.email}
+                helperText={!!errors.email && errors.email.message}
               />
               <TextField
                 variant="outlined"
@@ -123,7 +131,15 @@ const Login: FC<LoginProps> = ({ isLoggedIn, setIsLoggedIn }) => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                inputRef={register}
+                inputRef={register({
+                  required: 'パスワードは必ず入力してください',
+                  minLength: {
+                    value: 8,
+                    message: 'パスワードは8文字以上で入力してください',
+                  },
+                })}
+                error={!!errors.password}
+                helperText={!!errors.password && errors.password.message}
               />
               <Button
                 type="submit"
