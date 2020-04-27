@@ -1,6 +1,7 @@
-import React, { useState, FC } from 'react';
+import React, { FC } from 'react';
 import { useHistory, Redirect } from 'react-router-dom';
 import axios from 'axios';
+import { useForm } from 'react-hook-form';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -48,16 +49,22 @@ type LoginProps = {
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+type LoginFormData = {
+  email: string;
+  password: string;
+};
+
 const Login: FC<LoginProps> = ({ isLoggedIn, setIsLoggedIn }) => {
   const classes = useStyles();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
   const history = useHistory();
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
+  const { handleSubmit, register, errors } = useForm<LoginFormData>();
+
+  const handleOnSubmit = (data: LoginFormData) => {
+    const { email, password } = data;
+    debugger;
+
     axios
       .post(
         `${process.env.REACT_APP_API_HOST}/login`,
@@ -93,7 +100,7 @@ const Login: FC<LoginProps> = ({ isLoggedIn, setIsLoggedIn }) => {
             <Typography component="h1" variant="h5">
               LOGIN
             </Typography>
-            <form className={classes.form} noValidate>
+            <form className={classes.form} noValidate onSubmit={handleSubmit(handleOnSubmit)}>
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -104,11 +111,15 @@ const Login: FC<LoginProps> = ({ isLoggedIn, setIsLoggedIn }) => {
                 name="email"
                 autoComplete="email"
                 autoFocus
-                value={email}
-                // TODO: アンチパターンらしいのであとで修正する（他のフォームも同じ）
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
+                inputRef={register({
+                  required: 'メールアドレスは必ず入力してください',
+                  pattern: {
+                    value: /^[\w+\-.]+@[a-z\d\-.]+\.[a-z]+$/,
+                    message: 'メールアドレスは正しい形式で入力してください',
+                  },
+                })}
+                error={!!errors.email}
+                helperText={!!errors.email && errors.email.message}
               />
               <TextField
                 variant="outlined"
@@ -120,10 +131,15 @@ const Login: FC<LoginProps> = ({ isLoggedIn, setIsLoggedIn }) => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
+                inputRef={register({
+                  required: 'パスワードは必ず入力してください',
+                  minLength: {
+                    value: 8,
+                    message: 'パスワードは8文字以上で入力してください',
+                  },
+                })}
+                error={!!errors.password}
+                helperText={!!errors.password && errors.password.message}
               />
               <Button
                 type="submit"
@@ -131,7 +147,6 @@ const Login: FC<LoginProps> = ({ isLoggedIn, setIsLoggedIn }) => {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                onClick={handleSubmit}
               >
                 ログイン
               </Button>

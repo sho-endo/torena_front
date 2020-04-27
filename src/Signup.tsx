@@ -1,6 +1,7 @@
-import React, { FC, useState, FormEvent } from 'react';
+import React, { FC } from 'react';
 import { useHistory, Redirect } from 'react-router-dom';
 import axios from 'axios';
+import { useForm } from 'react-hook-form';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -51,17 +52,22 @@ type SignupProps = {
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+type SignupFormData = {
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+};
+
 const Signup: FC<SignupProps> = ({ isLoggedIn, setIsLoggedIn }) => {
   const classes = useStyles();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirmation, setPasswordConfirmation] = useState('');
-
   const history = useHistory();
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const { handleSubmit, register, errors } = useForm<SignupFormData>();
+
+  const handleOnSubmit = (data: SignupFormData) => {
+    const { email, password, passwordConfirmation } = data;
+
     axios
       .post(
         `${process.env.REACT_APP_API_HOST}/users`,
@@ -98,7 +104,7 @@ const Signup: FC<SignupProps> = ({ isLoggedIn, setIsLoggedIn }) => {
             <Typography component="h1" variant="h5">
               新規登録
             </Typography>
-            <form className={classes.form} noValidate>
+            <form className={classes.form} noValidate onSubmit={handleSubmit(handleOnSubmit)}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
@@ -109,11 +115,15 @@ const Signup: FC<SignupProps> = ({ isLoggedIn, setIsLoggedIn }) => {
                     label="Email"
                     name="email"
                     autoComplete="email"
-                    value={email}
-                    // TODO: アンチパターンらしいのであとで修正する（他のフォームも同じ）
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                    }}
+                    inputRef={register({
+                      required: 'メールアドレスは必ず入力してください',
+                      pattern: {
+                        value: /^[\w+\-.]+@[a-z\d\-.]+\.[a-z]+$/,
+                        message: 'メールアドレスは正しい形式で入力してください',
+                      },
+                    })}
+                    error={!!errors.email}
+                    helperText={!!errors.email ? errors.email.message : ' '}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -126,10 +136,19 @@ const Signup: FC<SignupProps> = ({ isLoggedIn, setIsLoggedIn }) => {
                     type="password"
                     id="password"
                     autoComplete="current-password"
-                    value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                    }}
+                    inputRef={register({
+                      required: 'パスワードは必ず入力してください',
+                      minLength: {
+                        value: 8,
+                        message: 'パスワードは8文字以上で入力してください',
+                      },
+                    })}
+                    error={!!errors.password}
+                    helperText={
+                      !!errors.password
+                        ? errors.password.message
+                        : 'パスワードは8文字以上で入力してください'
+                    }
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -142,10 +161,19 @@ const Signup: FC<SignupProps> = ({ isLoggedIn, setIsLoggedIn }) => {
                     type="password"
                     id="passwordConfirmation"
                     autoComplete="current-password"
-                    value={passwordConfirmation}
-                    onChange={(e) => {
-                      setPasswordConfirmation(e.target.value);
-                    }}
+                    inputRef={register({
+                      required: 'パスワード（確認）は必ず入力してください',
+                      minLength: {
+                        value: 8,
+                        message: 'パスワード（確認）は8文字以上で入力してください',
+                      },
+                    })}
+                    error={!!errors.passwordConfirmation}
+                    helperText={
+                      !!errors.passwordConfirmation
+                        ? errors.passwordConfirmation.message
+                        : 'パスワード（確認）は8文字以上で入力してください'
+                    }
                   />
                 </Grid>
               </Grid>
@@ -155,7 +183,6 @@ const Signup: FC<SignupProps> = ({ isLoggedIn, setIsLoggedIn }) => {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                onClick={handleSubmit}
               >
                 Sign Up
               </Button>
