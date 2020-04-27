@@ -63,7 +63,7 @@ const Signup: FC<SignupProps> = ({ isLoggedIn, setIsLoggedIn }) => {
 
   const history = useHistory();
 
-  const { handleSubmit, register } = useForm<SignupFormData>();
+  const { handleSubmit, register, errors } = useForm<SignupFormData>();
 
   const handleOnSubmit = (data: SignupFormData) => {
     const { email, password, passwordConfirmation } = data;
@@ -115,7 +115,15 @@ const Signup: FC<SignupProps> = ({ isLoggedIn, setIsLoggedIn }) => {
                     label="Email"
                     name="email"
                     autoComplete="email"
-                    inputRef={register}
+                    inputRef={register({
+                      required: 'メールアドレスは必ず入力してください',
+                      pattern: {
+                        value: /^[\w+\-.]+@[a-z\d\-.]+\.[a-z]+$/,
+                        message: 'メールアドレスは正しい形式で入力してください',
+                      },
+                    })}
+                    error={!!errors.email}
+                    helperText={!!errors.email ? errors.email.message : ' '}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -128,7 +136,19 @@ const Signup: FC<SignupProps> = ({ isLoggedIn, setIsLoggedIn }) => {
                     type="password"
                     id="password"
                     autoComplete="current-password"
-                    inputRef={register}
+                    inputRef={register({
+                      required: 'パスワードは必ず入力してください',
+                      minLength: {
+                        value: 8,
+                        message: 'パスワードは8文字以上で入力してください',
+                      },
+                    })}
+                    error={!!errors.password}
+                    helperText={
+                      !!errors.password
+                        ? errors.password.message
+                        : 'パスワードは8文字以上で入力してください'
+                    }
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -141,7 +161,19 @@ const Signup: FC<SignupProps> = ({ isLoggedIn, setIsLoggedIn }) => {
                     type="password"
                     id="passwordConfirmation"
                     autoComplete="current-password"
-                    inputRef={register}
+                    inputRef={register({
+                      required: 'パスワード（確認）は必ず入力してください',
+                      minLength: {
+                        value: 8,
+                        message: 'パスワード（確認）は8文字以上で入力してください',
+                      },
+                    })}
+                    error={!!errors.passwordConfirmation}
+                    helperText={
+                      !!errors.passwordConfirmation
+                        ? errors.passwordConfirmation.message
+                        : 'パスワード（確認）は8文字以上で入力してください'
+                    }
                   />
                 </Grid>
               </Grid>
