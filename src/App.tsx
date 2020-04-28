@@ -7,9 +7,20 @@ import About from './About';
 import Login from './Login';
 import SignUp from './Signup';
 import Auth from './Auth';
+import Snackbar from './Snackbar';
+
+export enum SnackbarSeverity {
+  ERROR = 'error',
+  WARINNG = 'warning',
+  INFO = 'info',
+  SUCCESS = 'success',
+}
 
 const App: FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<null | boolean>(null);
+  const [isOpenSnackbar, setIsOpenSnackbar] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState(SnackbarSeverity.ERROR);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const history = useHistory();
 
@@ -28,6 +39,9 @@ const App: FC = () => {
         console.log('Logout success!');
         setIsLoggedIn(false);
         history.push('/login');
+        setIsOpenSnackbar(true);
+        setSnackbarMessage('ログアウトしました');
+        setSnackbarSeverity(SnackbarSeverity.SUCCESS);
       })
       .catch((err) => {
         console.log('Logout falied', err);
@@ -62,23 +76,54 @@ const App: FC = () => {
         isLoggedIn === null
           ? '読み込み中' // TODO: ローディング用のコンポーネントに差し替え
           :
+          <React.Fragment>
             <Switch>
               <Route
                 exact
                 path="/login"
-                render={() => <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
+                render={() => (
+                  <Login
+                    isLoggedIn={isLoggedIn}
+                    setIsLoggedIn={setIsLoggedIn}
+                    setIsOpenSnackbar={setIsOpenSnackbar}
+                    setSnackbarMessage={setSnackbarMessage}
+                    setSnackbarSeverity={setSnackbarSeverity}
+                  />
+                )}
               />
               <Route
                 exact
                 path="/signup"
-                render={() => <SignUp isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
+                render={() => (
+                  <SignUp
+                    isLoggedIn={isLoggedIn}
+                    setIsLoggedIn={setIsLoggedIn}
+                    setIsOpenSnackbar={setIsOpenSnackbar}
+                    setSnackbarMessage={setSnackbarMessage}
+                    setSnackbarSeverity={setSnackbarSeverity}
+                  />
+                )}
               />
-              <Auth isLoggedIn={isLoggedIn}>
-                <Route path="/about" component={About} exact />
-                <Route path="/" component={Home} />
+              <Auth
+                isLoggedIn={isLoggedIn}
+                setIsOpenSnackbar={setIsOpenSnackbar}
+                setSnackbarSeverity={setSnackbarSeverity}
+                setSnackbarMessage={setSnackbarMessage}
+              >
+                <Switch>
+                  <Route path="/about" component={About} exact/>
+                  <Route path="/" component={Home} exact/>
+                </Switch>
               </Auth>
-              <Redirect to="/" />
+              <Redirect to="/"/>
             </Switch>
+            <Snackbar
+              isOpenSnackbar={isOpenSnackbar}
+              setIsOpenSnackbar={setIsOpenSnackbar}
+              snackbarSeverity={snackbarSeverity}
+              snackbarMessage={snackbarMessage}
+            />
+          </React.Fragment>
       }
     </React.Fragment>
   );

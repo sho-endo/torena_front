@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import { SnackbarSeverity } from './App';
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -50,6 +52,9 @@ const useStyles = makeStyles((theme) => ({
 type SignupProps = {
   isLoggedIn: null | boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<null | boolean>>;
+  setIsOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
+  setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>;
+  setSnackbarSeverity: React.Dispatch<React.SetStateAction<SnackbarSeverity>>;
 };
 
 type SignupFormData = {
@@ -58,7 +63,13 @@ type SignupFormData = {
   passwordConfirmation: string;
 };
 
-const Signup: FC<SignupProps> = ({ isLoggedIn, setIsLoggedIn }) => {
+const Signup: FC<SignupProps> = ({
+  isLoggedIn,
+  setIsLoggedIn,
+  setIsOpenSnackbar,
+  setSnackbarMessage,
+  setSnackbarSeverity,
+}) => {
   const classes = useStyles();
 
   const history = useHistory();
@@ -84,11 +95,25 @@ const Signup: FC<SignupProps> = ({ isLoggedIn, setIsLoggedIn }) => {
         console.log('signup success', res);
         setIsLoggedIn(true);
         history.push('/');
+        setIsOpenSnackbar(true);
+        setSnackbarSeverity(SnackbarSeverity.SUCCESS);
+        setSnackbarMessage('ユーザーを登録しました');
       })
       .catch((error) => {
         console.log('signup error', error);
+        setIsOpenSnackbar(true);
+        setSnackbarSeverity(SnackbarSeverity.ERROR);
+        // TODO: サーバーから受け取ったエラーメッセージを表示する
+        setSnackbarMessage('ユーザーの作成に失敗しました');
       });
   };
+
+  if (isLoggedIn) {
+    history.push('/');
+    setIsOpenSnackbar(true);
+    setSnackbarSeverity(SnackbarSeverity.WARINNG);
+    setSnackbarMessage('すでにログイン済みです');
+  }
 
   return (
     <React.Fragment>
