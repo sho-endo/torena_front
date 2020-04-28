@@ -58,23 +58,28 @@ const App: FC = () => {
         </ul>
       </nav>
 
-      <Switch>
-        <Route
-          exact
-          path="/login"
-          render={() => <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
-        />
-        <Route
-          exact
-          path="/signup"
-          render={() => <SignUp isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
-        />
-        <Auth isLoggedIn={isLoggedIn}>
-          <Route path="/about" component={About} exact />
-          <Route path="/" component={Home} />
-        </Auth>
-        <Redirect to="/" />
-      </Switch>
+      {
+        isLoggedIn === null
+          ? '読み込み中' // TODO: ローディング用のコンポーネントに差し替え
+          :
+            <Switch>
+              <Route
+                exact
+                path="/login"
+                render={() => <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
+              />
+              <Route
+                exact
+                path="/signup"
+                render={() => <SignUp isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
+              />
+              <Auth isLoggedIn={isLoggedIn}>
+                <Route path="/about" component={About} exact />
+                <Route path="/" component={Home} />
+              </Auth>
+              <Redirect to="/" />
+            </Switch>
+      }
     </React.Fragment>
   );
 };
