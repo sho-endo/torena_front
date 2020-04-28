@@ -9,7 +9,7 @@ import SignUp from './Signup';
 import Auth from './Auth';
 
 const App: FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<null | boolean>(null);
 
   const history = useHistory();
 
@@ -36,6 +36,7 @@ const App: FC = () => {
 
   return (
     <React.Fragment>
+      {/* TODO: ヘッダーは別コンポーネントに切り出す */}
       <nav>
         <ul>
           <li>
@@ -57,23 +58,28 @@ const App: FC = () => {
         </ul>
       </nav>
 
-      <Switch>
-        <Route
-          exact
-          path="/login"
-          render={() => <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
-        />
-        <Route
-          exact
-          path="/signup"
-          render={() => <SignUp isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
-        />
-        <Auth isLoggedIn={isLoggedIn}>
-          <Route path="/about" component={About} exact />
-          <Route path="/" component={Home} />
-        </Auth>
-        <Redirect to="/" />
-      </Switch>
+      {
+        isLoggedIn === null
+          ? '読み込み中' // TODO: ローディング用のコンポーネントに差し替え
+          :
+            <Switch>
+              <Route
+                exact
+                path="/login"
+                render={() => <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
+              />
+              <Route
+                exact
+                path="/signup"
+                render={() => <SignUp isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
+              />
+              <Auth isLoggedIn={isLoggedIn}>
+                <Route path="/about" component={About} exact />
+                <Route path="/" component={Home} />
+              </Auth>
+              <Redirect to="/" />
+            </Switch>
+      }
     </React.Fragment>
   );
 };

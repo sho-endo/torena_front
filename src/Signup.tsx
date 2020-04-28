@@ -48,8 +48,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type SignupProps = {
-  isLoggedIn: boolean;
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoggedIn: null | boolean;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<null | boolean>>;
 };
 
 type SignupFormData = {
