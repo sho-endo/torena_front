@@ -63,7 +63,6 @@ const Login: FC<LoginProps> = ({ isLoggedIn, setIsLoggedIn }) => {
 
   const handleOnSubmit = (data: LoginFormData) => {
     const { email, password } = data;
-    debugger;
 
     axios
       .post(
