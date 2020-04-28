@@ -36,6 +36,7 @@ const App: FC = () => {
 
   return (
     <React.Fragment>
+      {/* TODO: ヘッダーは別コンポーネントに切り出す */}
       <nav>
         <ul>
           <li>
