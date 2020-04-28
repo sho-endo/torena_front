@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
 type Props = {
-  isLoggedIn: boolean;
+  isLoggedIn: null | boolean;
 };
 
 const Auth: FC<Props> = ({ isLoggedIn, children }) => {

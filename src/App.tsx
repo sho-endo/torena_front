@@ -9,7 +9,7 @@ import SignUp from './Signup';
 import Auth from './Auth';
 
 const App: FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<null | boolean>(null);
 
   const history = useHistory();
 
