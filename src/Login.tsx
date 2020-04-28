@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import { SnackbarSeverity } from './App';
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -47,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
 type LoginProps = {
   isLoggedIn: null | boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<null | boolean>>;
+  setIsOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
+  setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>;
+  setSnackbarSeverity: React.Dispatch<React.SetStateAction<SnackbarSeverity>>;
 };
 
 type LoginFormData = {
@@ -54,7 +59,13 @@ type LoginFormData = {
   password: string;
 };
 
-const Login: FC<LoginProps> = ({ isLoggedIn, setIsLoggedIn }) => {
+const Login: FC<LoginProps> = ({
+  isLoggedIn,
+  setIsLoggedIn,
+  setIsOpenSnackbar,
+  setSnackbarMessage,
+  setSnackbarSeverity,
+}) => {
   const classes = useStyles();
 
   const history = useHistory();
@@ -79,11 +90,24 @@ const Login: FC<LoginProps> = ({ isLoggedIn, setIsLoggedIn }) => {
         console.log('login success', res);
         setIsLoggedIn(true);
         history.push('/');
+        setIsOpenSnackbar(true);
+        setSnackbarSeverity(SnackbarSeverity.SUCCESS);
+        setSnackbarMessage('ログインしました');
       })
       .catch((error) => {
         console.log('login error', error);
+        setIsOpenSnackbar(true);
+        setSnackbarSeverity(SnackbarSeverity.ERROR);
+        setSnackbarMessage('メールアドレスまたはパスワードが間違っています');
       });
   };
+
+  if (isLoggedIn) {
+    history.push('/');
+    setIsOpenSnackbar(true);
+    setSnackbarSeverity(SnackbarSeverity.WARINNG);
+    setSnackbarMessage('すでにログイン済みです');
+  }
 
   return (
     <React.Fragment>
