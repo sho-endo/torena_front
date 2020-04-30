@@ -2,12 +2,12 @@ import React, { FC, useState, useEffect } from 'react';
 import { Switch, Route, Redirect, Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 
-import Home from './Home';
-import About from './About';
-import Login from './Login';
-import SignUp from './Signup';
-import Auth from './Auth';
-import Snackbar from './Snackbar';
+import Home from './pages/Home';
+import About from './pages/About';
+import Login from './pages/Login';
+import SignUp from './pages/Signup';
+import Auth from './components/Auth';
+import Snackbar from './components/Snackbar';
 
 export enum SnackbarSeverity {
   ERROR = 'error',
@@ -72,59 +72,58 @@ const App: FC = () => {
         </ul>
       </nav>
 
-      {
-        isLoggedIn === null
-          ? '読み込み中' // TODO: ローディング用のコンポーネントに差し替え
-          :
-          <React.Fragment>
-            <Switch>
-              <Route
-                exact
-                path="/login"
-                render={() => (
-                  <Login
-                    isLoggedIn={isLoggedIn}
-                    setIsLoggedIn={setIsLoggedIn}
-                    setIsOpenSnackbar={setIsOpenSnackbar}
-                    setSnackbarMessage={setSnackbarMessage}
-                    setSnackbarSeverity={setSnackbarSeverity}
-                  />
-                )}
-              />
-              <Route
-                exact
-                path="/signup"
-                render={() => (
-                  <SignUp
-                    isLoggedIn={isLoggedIn}
-                    setIsLoggedIn={setIsLoggedIn}
-                    setIsOpenSnackbar={setIsOpenSnackbar}
-                    setSnackbarMessage={setSnackbarMessage}
-                    setSnackbarSeverity={setSnackbarSeverity}
-                  />
-                )}
-              />
-              <Auth
-                isLoggedIn={isLoggedIn}
-                setIsOpenSnackbar={setIsOpenSnackbar}
-                setSnackbarSeverity={setSnackbarSeverity}
-                setSnackbarMessage={setSnackbarMessage}
-              >
-                <Switch>
-                  <Route path="/about" component={About} exact/>
-                  <Route path="/" component={Home} exact/>
-                </Switch>
-              </Auth>
-              <Redirect to="/"/>
-            </Switch>
-            <Snackbar
-              isOpenSnackbar={isOpenSnackbar}
-              setIsOpenSnackbar={setIsOpenSnackbar}
-              snackbarSeverity={snackbarSeverity}
-              snackbarMessage={snackbarMessage}
+      {isLoggedIn === null ? (
+        '読み込み中' // TODO: ローディング用のコンポーネントに差し替え
+      ) : (
+        <React.Fragment>
+          <Switch>
+            <Route
+              exact
+              path="/login"
+              render={() => (
+                <Login
+                  isLoggedIn={isLoggedIn}
+                  setIsLoggedIn={setIsLoggedIn}
+                  setIsOpenSnackbar={setIsOpenSnackbar}
+                  setSnackbarMessage={setSnackbarMessage}
+                  setSnackbarSeverity={setSnackbarSeverity}
+                />
+              )}
             />
-          </React.Fragment>
-      }
+            <Route
+              exact
+              path="/signup"
+              render={() => (
+                <SignUp
+                  isLoggedIn={isLoggedIn}
+                  setIsLoggedIn={setIsLoggedIn}
+                  setIsOpenSnackbar={setIsOpenSnackbar}
+                  setSnackbarMessage={setSnackbarMessage}
+                  setSnackbarSeverity={setSnackbarSeverity}
+                />
+              )}
+            />
+            <Auth
+              isLoggedIn={isLoggedIn}
+              setIsOpenSnackbar={setIsOpenSnackbar}
+              setSnackbarSeverity={setSnackbarSeverity}
+              setSnackbarMessage={setSnackbarMessage}
+            >
+              <Switch>
+                <Route path="/about" component={About} exact />
+                <Route path="/" component={Home} exact />
+              </Switch>
+            </Auth>
+            <Redirect to="/" />
+          </Switch>
+          <Snackbar
+            isOpenSnackbar={isOpenSnackbar}
+            setIsOpenSnackbar={setIsOpenSnackbar}
+            snackbarSeverity={snackbarSeverity}
+            snackbarMessage={snackbarMessage}
+          />
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };
