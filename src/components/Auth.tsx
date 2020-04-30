@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
-import { SnackbarSeverity } from './App';
+import { SnackbarSeverity } from '../App';
 
 type Props = {
   isLoggedIn: null | boolean;
