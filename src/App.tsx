@@ -1,11 +1,12 @@
 import React, { FC, useState, useEffect } from 'react';
-import { Switch, Route, Redirect, Link, useHistory } from 'react-router-dom';
+import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
 import SignUp from './pages/Signup';
+import Header from './components/Header';
 import Auth from './components/Auth';
 import Snackbar from './components/Snackbar';
 
@@ -32,7 +33,7 @@ const App: FC = () => {
       });
   }, []);
 
-  const handleLogoutClick = () => {
+  const handleClickLogout = () => {
     axios
       .delete(`${process.env.REACT_APP_API_HOST}/logout`, { withCredentials: true })
       .then((res) => {
@@ -50,27 +51,7 @@ const App: FC = () => {
 
   return (
     <React.Fragment>
-      {/* TODO: ヘッダーは別コンポーネントに切り出す */}
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-          <li>
-            <Link to="/signup">Signup</Link>
-          </li>
-          <li>
-            <button onClick={handleLogoutClick}>ログアウト</button>
-          </li>
-          <li>{isLoggedIn ? 'ログイン中です' : 'ログインしてません'}</li>
-        </ul>
-      </nav>
+      <Header isLoggedIn={isLoggedIn} handleClickLogout={handleClickLogout} />
 
       {isLoggedIn === null ? (
         '読み込み中' // TODO: ローディング用のコンポーネントに差し替え
