@@ -9,6 +9,7 @@ import SignUp from './pages/Signup';
 import Header from './components/Header';
 import Auth from './components/Auth';
 import Snackbar from './components/Snackbar';
+import Loading from './components/Loading';
 
 export enum SnackbarSeverity {
   ERROR = 'error',
@@ -54,7 +55,7 @@ const App: FC = () => {
       <Header isLoggedIn={isLoggedIn} handleClickLogout={handleClickLogout} />
 
       {isLoggedIn === null ? (
-        '読み込み中' // TODO: ローディング用のコンポーネントに差し替え
+        <Loading />
       ) : (
         <React.Fragment>
           <Switch>
