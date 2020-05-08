@@ -13,7 +13,7 @@ import Loading from './components/Loading';
 
 export enum SnackbarSeverity {
   ERROR = 'error',
-  WARINNG = 'warning',
+  WARNING = 'warning',
   INFO = 'info',
   SUCCESS = 'success',
 }
@@ -46,7 +46,7 @@ const App: FC = () => {
         setSnackbarSeverity(SnackbarSeverity.SUCCESS);
       })
       .catch((err) => {
-        console.log('Logout falied', err);
+        console.log('Logout failed', err);
       });
   };
 
