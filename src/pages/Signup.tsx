@@ -111,7 +111,7 @@ const Signup: FC<SignupProps> = ({
   if (isLoggedIn) {
     history.push('/');
     setIsOpenSnackbar(true);
-    setSnackbarSeverity(SnackbarSeverity.WARINNG);
+    setSnackbarSeverity(SnackbarSeverity.WARNING);
     setSnackbarMessage('すでにログイン済みです');
   }
 

@@ -13,7 +13,7 @@ import Loading from './components/Loading';
 
 export enum SnackbarSeverity {
   ERROR = 'error',
-  WARINNG = 'warning',
+  WARNING = 'warning',
   INFO = 'info',
   SUCCESS = 'success',
 }
@@ -46,67 +46,63 @@ const App: FC = () => {
         setSnackbarSeverity(SnackbarSeverity.SUCCESS);
       })
       .catch((err) => {
-        console.log('Logout falied', err);
+        console.log('Logout failed', err);
       });
   };
 
-  return (
-    <React.Fragment>
-      <Header isLoggedIn={isLoggedIn} handleClickLogout={handleClickLogout} />
+  // TODO: isLoadingみたいなstateの方がわかりやすそう
+  if (isLoggedIn === null) {
+    return <Loading />;
+  }
 
-      {isLoggedIn === null ? (
-        <Loading />
-      ) : (
-        <React.Fragment>
-          <Switch>
-            <Route
-              exact
-              path="/login"
-              render={() => (
-                <Login
-                  isLoggedIn={isLoggedIn}
-                  setIsLoggedIn={setIsLoggedIn}
-                  setIsOpenSnackbar={setIsOpenSnackbar}
-                  setSnackbarMessage={setSnackbarMessage}
-                  setSnackbarSeverity={setSnackbarSeverity}
-                />
-              )}
-            />
-            <Route
-              exact
-              path="/signup"
-              render={() => (
-                <SignUp
-                  isLoggedIn={isLoggedIn}
-                  setIsLoggedIn={setIsLoggedIn}
-                  setIsOpenSnackbar={setIsOpenSnackbar}
-                  setSnackbarMessage={setSnackbarMessage}
-                  setSnackbarSeverity={setSnackbarSeverity}
-                />
-              )}
-            />
-            <Auth
+  return (
+    <>
+      <Header isLoggedIn={isLoggedIn} handleClickLogout={handleClickLogout} />
+      <Switch>
+        <Route
+          exact
+          path="/login"
+          render={() => (
+            <Login
               isLoggedIn={isLoggedIn}
+              setIsLoggedIn={setIsLoggedIn}
               setIsOpenSnackbar={setIsOpenSnackbar}
-              setSnackbarSeverity={setSnackbarSeverity}
               setSnackbarMessage={setSnackbarMessage}
-            >
-              <Switch>
-                <Route path="/about" component={About} exact />
-                <Route path="/" component={Home} exact />
-              </Switch>
-            </Auth>
-            <Redirect to="/" />
-          </Switch>
-          <Snackbar
-            isOpenSnackbar={isOpenSnackbar}
-            setIsOpenSnackbar={setIsOpenSnackbar}
-            snackbarSeverity={snackbarSeverity}
-            snackbarMessage={snackbarMessage}
-          />
-        </React.Fragment>
-      )}
-    </React.Fragment>
+              setSnackbarSeverity={setSnackbarSeverity}
+            />
+          )}
+        />
+        <Route
+          exact
+          path="/signup"
+          render={() => (
+            <SignUp
+              isLoggedIn={isLoggedIn}
+              setIsLoggedIn={setIsLoggedIn}
+              setIsOpenSnackbar={setIsOpenSnackbar}
+              setSnackbarMessage={setSnackbarMessage}
+              setSnackbarSeverity={setSnackbarSeverity}
+            />
+          )}
+        />
+        <Auth
+          isLoggedIn={isLoggedIn}
+          setIsOpenSnackbar={setIsOpenSnackbar}
+          setSnackbarSeverity={setSnackbarSeverity}
+          setSnackbarMessage={setSnackbarMessage}
+        >
+          <Route path="/about" component={About} exact />
+          <Route path="/" component={Home} exact />
+        </Auth>
+        <Redirect to="/" />
+      </Switch>
+      <Snackbar
+        isOpenSnackbar={isOpenSnackbar}
+        setIsOpenSnackbar={setIsOpenSnackbar}
+        snackbarSeverity={snackbarSeverity}
+        snackbarMessage={snackbarMessage}
+      />
+    </>
   );
 };
 
