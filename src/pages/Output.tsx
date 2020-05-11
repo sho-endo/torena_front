@@ -9,6 +9,11 @@ import List from '@material-ui/core/List';
 import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+
+// TODO: データをAPIから取得するように置き換える
+import { menuData } from '../menuData';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -19,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
     listRoot: {
       width: '100%',
       maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: theme.palette.background.default,
     },
   })
 );
@@ -31,18 +36,47 @@ const ListItemLink = (props: ListItemProps<'a', { button?: true }>) => {
 const Output = () => {
   const classes = useStyles();
   const [part, setPart] = useState('');
-  const [count, setCount] = useState('');
+  const [count, setCount] = useState(1);
+  const [outputMenus, setOutputMenus] = useState<string[]>([]);
+
+  const parts = Object.keys(menuData);
+
+  const randomSelect = (array: string[], num: number) => {
+    // 複製せずに元の配列の要素が削除されるため
+    let copiedArray = [...array];
+    let newArray = [];
+
+    while (newArray.length < num && copiedArray.length > 0) {
+      // 配列からランダムな要素を選ぶ
+      const rand = Math.floor(Math.random() * copiedArray.length);
+      // 選んだ要素を別の配列に登録する
+      newArray.push(copiedArray[rand]);
+      // もとの配列からは削除する
+      copiedArray.splice(rand, 1);
+    }
+
+    return newArray;
+  };
 
   const handleChangePartSelect = (event: React.ChangeEvent<{ value: unknown }>) => {
     setPart(event.target.value as string);
   };
 
   const handleChangeCountSelect = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setCount(event.target.value as string);
+    setCount(event.target.value as number);
+  };
+
+  const handleClickButton = () => {
+    // partが空だとエラーになるので一旦早期return
+    if (part === '') {
+      return;
+    }
+    setOutputMenus(randomSelect(menuData[part], count));
   };
 
   return (
-    <React.Fragment>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
       <FormControl variant="outlined" className={classes.formControl}>
         <InputLabel id="demo-simple-select-outlined-label">部位</InputLabel>
         <Select
@@ -52,12 +86,13 @@ const Output = () => {
           onChange={handleChangePartSelect}
           label="部位"
         >
-          <MenuItem value="">
-            <em></em>
-          </MenuItem>
-          <MenuItem value="胸">胸</MenuItem>
-          <MenuItem value="肩">肩</MenuItem>
-          <MenuItem value="二頭">二頭</MenuItem>
+          {parts.map((part, i) => {
+            return (
+              <MenuItem value={part} key={i}>
+                {part}
+              </MenuItem>
+            );
+          })}
         </Select>
       </FormControl>
       <FormControl variant="outlined" className={classes.formControl}>
@@ -69,35 +104,35 @@ const Output = () => {
           onChange={handleChangeCountSelect}
           label="種目数"
         >
-          <MenuItem value=""></MenuItem>
-          <MenuItem value="1">1</MenuItem>
-          <MenuItem value="2">2</MenuItem>
-          <MenuItem value="3">3</MenuItem>
+          <MenuItem value={1}>1</MenuItem>
+          <MenuItem value={2}>2</MenuItem>
+          <MenuItem value={3}>3</MenuItem>
+          <MenuItem value={4}>4</MenuItem>
+          <MenuItem value={5}>5</MenuItem>
         </Select>
       </FormControl>
-      <Button variant="contained" color="primary">
+      <Button variant="contained" color="primary" onClick={handleClickButton}>
         決定
       </Button>
+
       <div className={classes.listRoot}>
         <List component="nav" aria-label="menus">
-          <Divider />
-          <ListItemLink
-            href="https://www.youtube.com/results?search_query=インクラインダンベルフライ"
-            target="_blank"
-          >
-            <ListItemText primary="インクラインダンベルフライ" />
-          </ListItemLink>
-          <Divider />
-          <ListItemLink
-            href="https://www.youtube.com/results?search_query=ベンチプレス"
-            target="_blank"
-          >
-            <ListItemText primary="ベンチプレス" />
-          </ListItemLink>
-          <Divider />
+          {outputMenus.map((menu, i) => {
+            return (
+              <React.Fragment key={i + 100}>
+                <ListItemLink
+                  href={`https://www.youtube.com/results?search_query=${menu}`}
+                  target="_blank"
+                >
+                  <ListItemText primary={menu} />
+                </ListItemLink>
+                <Divider />
+              </React.Fragment>
+            );
+          })}
         </List>
       </div>
-    </React.Fragment>
+    </Container>
   );
 };
 
