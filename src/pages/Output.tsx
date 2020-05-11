@@ -11,12 +11,23 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Typography from '@material-ui/core/Typography';
 
 // TODO: データをAPIから取得するように置き換える
 import { menuData } from '../menuData';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {
+      marginTop: theme.spacing(5),
+    },
+    heading: {
+      marginBottom: theme.spacing(3),
+    },
+    enterBtn: {
+      marginTop: theme.spacing(3.5),
+      marginLeft: theme.spacing(3),
+    },
     formControl: {
       margin: theme.spacing(1),
       minWidth: 120,
@@ -24,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
     listRoot: {
       width: '100%',
       maxWidth: 360,
+      marginTop: theme.spacing(3),
       backgroundColor: theme.palette.background.default,
     },
   })
@@ -75,8 +87,11 @@ const Output = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" className={classes.root}>
       <CssBaseline />
+      <Typography component="h1" variant="h4" align="center" className={classes.heading}>
+        メニュー出力
+      </Typography>
       <FormControl variant="outlined" className={classes.formControl}>
         <InputLabel id="demo-simple-select-outlined-label">部位</InputLabel>
         <Select
@@ -111,7 +126,12 @@ const Output = () => {
           <MenuItem value={5}>5</MenuItem>
         </Select>
       </FormControl>
-      <Button variant="contained" color="primary" onClick={handleClickButton}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleClickButton}
+        className={classes.enterBtn}
+      >
         決定
       </Button>
 
