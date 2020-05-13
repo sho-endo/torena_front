@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface PartWithMenu {
+export interface PartWithMenu {
   id: number;
   name: string;
   menus: string[];

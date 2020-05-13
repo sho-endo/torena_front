@@ -10,7 +10,7 @@ import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 
-import { PartWithMenu } from '../menuData';
+import { PartWithMenu } from '../pages/Output';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
