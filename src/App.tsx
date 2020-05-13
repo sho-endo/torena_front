@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from 'react';
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
-import axios from 'axios';
+import { apiClient } from './lib/axios';
 
 import New from './pages/New';
 import Output from './pages/Output';
@@ -27,16 +27,14 @@ const App: FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_HOST}/logged_in`, { withCredentials: true })
-      .then((res) => {
-        setIsLoggedIn(res.data.logged_in);
-      });
+    apiClient.get('/logged_in').then((res) => {
+      setIsLoggedIn(res.data.logged_in);
+    });
   }, []);
 
   const handleClickLogout = () => {
-    axios
-      .delete(`${process.env.REACT_APP_API_HOST}/logout`, { withCredentials: true })
+    apiClient
+      .delete('/logout')
       .then((res) => {
         console.log('Logout success!');
         setIsLoggedIn(false);
