@@ -46,13 +46,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+type LoginProps = {
+  isLoggedIn: boolean;
+};
+
 type LoginFormData = {
   email: string;
   password: string;
 };
 
-const Login: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useGlobal('isLoggedIn');
+const Login: React.FC<LoginProps> = ({ isLoggedIn }) => {
+  const setIsLoggedIn = useGlobal('isLoggedIn')[1];
   const setIsOpenSnackbar = useGlobal('isOpenSnackbar')[1];
   const setSnackbarSeverity = useGlobal('snackbarSeverity')[1];
   const setSnackbarMessage = useGlobal('snackbarMessage')[1];

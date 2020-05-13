@@ -55,8 +55,12 @@ type SignupFormData = {
   passwordConfirmation: string;
 };
 
-const Signup: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useGlobal('isLoggedIn');
+type SignupProps = {
+  isLoggedIn: boolean;
+};
+
+const Signup: React.FC<SignupProps> = ({ isLoggedIn }) => {
+  const setIsLoggedIn = useGlobal('isLoggedIn')[1];
   const setIsOpenSnackbar = useGlobal('isOpenSnackbar')[1];
   const setSnackbarSeverity = useGlobal('snackbarSeverity')[1];
   const setSnackbarMessage = useGlobal('snackbarMessage')[1];

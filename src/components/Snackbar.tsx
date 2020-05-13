@@ -3,20 +3,11 @@ import Snackbar, { SnackbarCloseReason } from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { SnackbarSeverity } from '../constants';
-
 type alertProps = {
   severity: string;
   onClose: (event: React.SyntheticEvent<any, Event>, reason: any) => void;
   children: React.ReactNode;
 };
-
-// type snackbarProps = {
-//   isOpenSnackbar: boolean;
-//   setIsOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
-//   snackbarSeverity: SnackbarSeverity;
-//   snackbarMessage: string;
-// };
 
 function Alert<alertProps>(props: alertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;

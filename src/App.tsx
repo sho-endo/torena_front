@@ -12,6 +12,7 @@ import Snackbar from './components/Snackbar';
 import Loading from './components/Loading';
 
 const App: React.FC = () => {
+  const isLoggedIn = useGlobal('isLoggedIn')[0];
   const [isLoading, setIsLoading] = useGlobal('isLoading');
   const setIsLoggedIn = useGlobal('isLoggedIn')[1];
 
@@ -28,11 +29,11 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Header />
+      <Header isLoggedIn={isLoggedIn} />
       <Switch>
-        <Route exact path="/login" render={() => <Login />} />
-        <Route exact path="/signup" render={() => <SignUp />} />
-        <Auth>
+        <Route exact path="/login" render={() => <Login isLoggedIn={isLoggedIn} />} />
+        <Route exact path="/signup" render={() => <SignUp isLoggedIn={isLoggedIn} />} />
+        <Auth isLoggedIn={isLoggedIn}>
           <Route path="/" component={Output} exact />
           <Route path="/new" component={New} exact />
         </Auth>
