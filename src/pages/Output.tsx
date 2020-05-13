@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import axios from 'axios';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import { apiClient } from '../lib/axios';
 
 import OutputForm from '../components/OutputForm';
 
@@ -42,8 +42,8 @@ const Output = () => {
   };
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_HOST}/parts?include_menus=true`, { withCredentials: true })
+    apiClient
+      .get('parts?include_menus=true')
       .then((res) => {
         setPartWithMenus(res.data);
       })

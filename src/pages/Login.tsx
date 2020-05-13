@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import { useHistory, Redirect } from 'react-router-dom';
-import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -13,6 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { apiClient } from '../lib/axios';
 
 import { SnackbarSeverity } from '../App';
 
@@ -75,17 +75,13 @@ const Login: FC<LoginProps> = ({
   const handleOnSubmit = (data: LoginFormData) => {
     const { email, password } = data;
 
-    axios
-      .post(
-        `${process.env.REACT_APP_API_HOST}/login`,
-        {
-          session: {
-            email: email,
-            password: password,
-          },
+    apiClient
+      .post('/login', {
+        session: {
+          email: email,
+          password: password,
         },
-        { withCredentials: true }
-      )
+      })
       .then((res) => {
         console.log('login success', res);
         setIsLoggedIn(true);

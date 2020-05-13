@@ -1,8 +1,8 @@
 import React, { FC, useState, useEffect } from 'react';
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
-import axios from 'axios';
+import { apiClient } from './lib/axios';
 
-import Home from './pages/Home';
+import New from './pages/New';
 import Output from './pages/Output';
 import Login from './pages/Login';
 import SignUp from './pages/Signup';
@@ -27,16 +27,14 @@ const App: FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_HOST}/logged_in`, { withCredentials: true })
-      .then((res) => {
-        setIsLoggedIn(res.data.logged_in);
-      });
+    apiClient.get('/logged_in').then((res) => {
+      setIsLoggedIn(res.data.logged_in);
+    });
   }, []);
 
   const handleClickLogout = () => {
-    axios
-      .delete(`${process.env.REACT_APP_API_HOST}/logout`, { withCredentials: true })
+    apiClient
+      .delete('/logout')
       .then((res) => {
         console.log('Logout success!');
         setIsLoggedIn(false);
@@ -91,8 +89,8 @@ const App: FC = () => {
           setSnackbarSeverity={setSnackbarSeverity}
           setSnackbarMessage={setSnackbarMessage}
         >
-          <Route path="/output" component={Output} exact />
-          <Route path="/" component={Home} exact />
+          <Route path="/" component={Output} exact />
+          <Route path="/new" component={New} exact />
         </Auth>
         <Redirect to="/" />
       </Switch>
