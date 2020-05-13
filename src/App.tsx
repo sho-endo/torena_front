@@ -11,12 +11,7 @@ import Auth from './components/Auth';
 import Snackbar from './components/Snackbar';
 import Loading from './components/Loading';
 
-export enum SnackbarSeverity {
-  ERROR = 'error',
-  WARNING = 'warning',
-  INFO = 'info',
-  SUCCESS = 'success',
-}
+import { SnackbarSeverity } from './constants';
 
 const App: FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<null | boolean>(null);

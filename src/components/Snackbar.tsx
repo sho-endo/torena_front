@@ -3,7 +3,7 @@ import Snackbar, { SnackbarCloseReason } from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { SnackbarSeverity } from '../App';
+import { SnackbarSeverity } from '../constants';
 
 type alertProps = {
   severity: string;

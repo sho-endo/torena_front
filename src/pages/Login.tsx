@@ -14,7 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { apiClient } from '../lib/axios';
 
-import { SnackbarSeverity } from '../App';
+import { SnackbarSeverity } from '../constants';
 
 function Copyright() {
   return (
