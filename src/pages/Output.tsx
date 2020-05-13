@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 // TODO: データをAPIから取得するように置き換える
-import { menuData } from '../menuData';
+import { partWithMenus } from '../menuData';
 import OutputForm from '../components/OutputForm';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -42,7 +42,7 @@ const Output = () => {
         メニュー出力
       </Typography>
       {[...Array(formCount)].map((_, i) => {
-        return <OutputForm key={i} menuData={menuData} />;
+        return <OutputForm key={i} partWithMenus={partWithMenus} />;
       })}
       <AddCircleIcon
         color="primary"

@@ -10,7 +10,7 @@ import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 
-import { Menus } from '../menuData';
+import { PartWithMenu } from '../menuData';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,40 +32,40 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type OutputFormProps = {
-  menuData: Menus;
+  partWithMenus: PartWithMenu[];
 };
 
 const ListItemLink = (props: ListItemProps<'a', { button?: true }>) => {
   return <ListItem button component="a" {...props} />;
 };
 
-const OutputForm: FC<OutputFormProps> = ({ menuData }) => {
+const OutputForm: FC<OutputFormProps> = ({ partWithMenus }) => {
   const classes = useStyles();
-  const [part, setPart] = useState('');
+  const [targetPart, setTargetPart] = useState('');
   const [count, setCount] = useState(1);
   const [outputMenus, setOutputMenus] = useState<string[]>([]);
 
-  const parts = Object.keys(menuData);
-
   const randomSelect = (array: string[], num: number) => {
-    // 複製せずに元の配列の要素が削除されるため
+    // 元の配列を削除しないように複製する
     let copiedArray = [...array];
     let newArray = [];
 
     while (newArray.length < num && copiedArray.length > 0) {
-      // 配列からランダムな要素を選ぶ
       const rand = Math.floor(Math.random() * copiedArray.length);
-      // 選んだ要素を別の配列に登録する
       newArray.push(copiedArray[rand]);
-      // もとの配列からは削除する
       copiedArray.splice(rand, 1);
     }
 
     return newArray;
   };
 
+  const partNames: string[] = [];
+  partWithMenus.forEach((partWithMenu) => {
+    partNames.push(partWithMenu.name);
+  });
+
   const handleChangePartSelect = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setPart(event.target.value as string);
+    setTargetPart(event.target.value as string);
   };
 
   const handleChangeCountSelect = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -74,10 +74,17 @@ const OutputForm: FC<OutputFormProps> = ({ menuData }) => {
 
   const handleClickButton = () => {
     // partが空だとエラーになるので一旦早期return
-    if (part === '') {
+    if (targetPart === '') {
       return;
     }
-    setOutputMenus(randomSelect(menuData[part], count));
+
+    const targetPartWithMenu = partWithMenus.find((partWithMenu) => {
+      return partWithMenu.name === targetPart;
+    });
+    if (targetPartWithMenu == null) {
+      return;
+    }
+    setOutputMenus(randomSelect(targetPartWithMenu.menus, count));
   };
 
   return (
@@ -87,11 +94,11 @@ const OutputForm: FC<OutputFormProps> = ({ menuData }) => {
         <Select
           labelId="demo-simple-select-outlined-label"
           id="demo-simple-select-outlined"
-          value={part}
+          value={targetPart}
           onChange={handleChangePartSelect}
           label="部位"
         >
-          {parts.map((part, i) => {
+          {partNames.map((part, i) => {
             return (
               <MenuItem value={part} key={i}>
                 {part}
