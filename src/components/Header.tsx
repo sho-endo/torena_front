@@ -1,10 +1,13 @@
-import React, { FC } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useGlobal } from 'reactn';
+import { Link, useHistory } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import { apiClient } from '../lib/axios';
+
+import { SnackbarSeverity } from '../constants';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,13 +24,30 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-type HeaderProps = {
-  isLoggedIn: null | boolean;
-  handleClickLogout: () => void;
-};
+const Header: React.FC = () => {
+  const [isLoggedIn, setIsLoggedIn] = useGlobal('isLoggedIn');
+  const setIsOpenSnackbar = useGlobal('isOpenSnackbar')[1];
+  const setSnackbarSeverity = useGlobal('snackbarSeverity')[1];
+  const setSnackbarMessage = useGlobal('snackbarMessage')[1];
 
-const Header: FC<HeaderProps> = ({ isLoggedIn, handleClickLogout }) => {
   const classes = useStyles();
+  const history = useHistory();
+
+  const handleClickLogout = () => {
+    apiClient
+      .delete('/logout')
+      .then((res) => {
+        console.log('Logout success!');
+        setIsLoggedIn(false);
+        history.push('/login');
+        setIsOpenSnackbar(true);
+        setSnackbarMessage('ログアウトしました');
+        setSnackbarSeverity(SnackbarSeverity.SUCCESS);
+      })
+      .catch((err) => {
+        console.log('Logout failed', err);
+      });
+  };
 
   return (
     <div className={classes.root}>

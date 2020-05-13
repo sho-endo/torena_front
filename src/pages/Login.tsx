@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { useGlobal } from 'reactn';
 import { useHistory, Redirect } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Avatar from '@material-ui/core/Avatar';
@@ -14,7 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { apiClient } from '../lib/axios';
 
-import { SnackbarSeverity } from '../App';
+import { SnackbarSeverity } from '../constants';
 
 function Copyright() {
   return (
@@ -46,26 +46,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type LoginProps = {
-  isLoggedIn: null | boolean;
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<null | boolean>>;
-  setIsOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
-  setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>;
-  setSnackbarSeverity: React.Dispatch<React.SetStateAction<SnackbarSeverity>>;
-};
-
 type LoginFormData = {
   email: string;
   password: string;
 };
 
-const Login: FC<LoginProps> = ({
-  isLoggedIn,
-  setIsLoggedIn,
-  setIsOpenSnackbar,
-  setSnackbarMessage,
-  setSnackbarSeverity,
-}) => {
+const Login: React.FC = () => {
+  const [isLoggedIn, setIsLoggedIn] = useGlobal('isLoggedIn');
+  const setIsOpenSnackbar = useGlobal('isOpenSnackbar')[1];
+  const setSnackbarSeverity = useGlobal('snackbarSeverity')[1];
+  const setSnackbarMessage = useGlobal('snackbarMessage')[1];
+
   const classes = useStyles();
 
   const history = useHistory();
@@ -107,87 +98,78 @@ const Login: FC<LoginProps> = ({
 
   return (
     <React.Fragment>
-      {isLoggedIn ? (
-        <Redirect to={'/'} />
-      ) : (
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              LOGIN
-            </Typography>
-            <form className={classes.form} noValidate onSubmit={handleSubmit(handleOnSubmit)}>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                inputRef={register({
-                  required: 'メールアドレスは必ず入力してください',
-                  pattern: {
-                    value: /^[\w+\-.]+@[a-z\d\-.]+\.[a-z]+$/,
-                    message: 'メールアドレスは正しい形式で入力してください',
-                  },
-                })}
-                error={!!errors.email}
-                helperText={!!errors.email && errors.email.message}
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                inputRef={register({
-                  required: 'パスワードは必ず入力してください',
-                  minLength: {
-                    value: 8,
-                    message: 'パスワードは8文字以上で入力してください',
-                  },
-                })}
-                error={!!errors.password}
-                helperText={!!errors.password && errors.password.message}
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                ログイン
-              </Button>
-              <Grid container justify="center">
-                {/* <Grid item xs>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            LOGIN
+          </Typography>
+          <form className={classes.form} noValidate onSubmit={handleSubmit(handleOnSubmit)}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              inputRef={register({
+                required: 'メールアドレスは必ず入力してください',
+                pattern: {
+                  value: /^[\w+\-.]+@[a-z\d\-.]+\.[a-z]+$/,
+                  message: 'メールアドレスは正しい形式で入力してください',
+                },
+              })}
+              error={!!errors.email}
+              helperText={!!errors.email && errors.email.message}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              inputRef={register({
+                required: 'パスワードは必ず入力してください',
+                minLength: {
+                  value: 8,
+                  message: 'パスワードは8文字以上で入力してください',
+                },
+              })}
+              error={!!errors.password}
+              helperText={!!errors.password && errors.password.message}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              ログイン
+            </Button>
+            <Grid container justify="center">
+              <Grid item>
                 <Link href="#" variant="body2">
-                  Forgot password?
+                  {'アカウントをお持ちでない方はこちら'}
                 </Link>
-              </Grid> */}
-                <Grid item>
-                  <Link href="#" variant="body2">
-                    {'アカウントをお持ちでない方はこちら'}
-                  </Link>
-                </Grid>
               </Grid>
-            </form>
-          </div>
-          <Box mt={8}>
-            <Copyright />
-          </Box>
-        </Container>
-      )}
+            </Grid>
+          </form>
+        </div>
+        <Box mt={8}>
+          <Copyright />
+        </Box>
+      </Container>
     </React.Fragment>
   );
 };

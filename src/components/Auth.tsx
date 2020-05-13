@@ -1,21 +1,13 @@
-import React, { FC } from 'react';
+import React, { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
-import { SnackbarSeverity } from '../App';
+import { SnackbarSeverity } from '../constants';
 
-type Props = {
-  isLoggedIn: null | boolean;
-  setIsOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
-  setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>;
-  setSnackbarSeverity: React.Dispatch<React.SetStateAction<SnackbarSeverity>>;
-};
+const Auth: React.FC = ({ children }) => {
+  const isLoggedIn = useGlobal('isLoggedIn')[0];
+  const setIsOpenSnackbar = useGlobal('isOpenSnackbar')[1];
+  const setSnackbarSeverity = useGlobal('snackbarSeverity')[1];
+  const setSnackbarMessage = useGlobal('snackbarMessage')[1];
 
-const Auth: FC<Props> = ({
-  isLoggedIn,
-  children,
-  setIsOpenSnackbar,
-  setSnackbarMessage,
-  setSnackbarSeverity,
-}) => {
   if (isLoggedIn === false) {
     setIsOpenSnackbar(true);
     setSnackbarSeverity(SnackbarSeverity.INFO);

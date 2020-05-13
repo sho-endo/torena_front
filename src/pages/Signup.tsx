@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { useGlobal } from 'reactn';
 import { useHistory, Redirect } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Avatar from '@material-ui/core/Avatar';
@@ -14,7 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { apiClient } from '../lib/axios';
 
-import { SnackbarSeverity } from '../App';
+import { SnackbarSeverity } from '../constants';
 
 function Copyright() {
   return (
@@ -49,27 +49,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type SignupProps = {
-  isLoggedIn: null | boolean;
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<null | boolean>>;
-  setIsOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
-  setSnackbarMessage: React.Dispatch<React.SetStateAction<string>>;
-  setSnackbarSeverity: React.Dispatch<React.SetStateAction<SnackbarSeverity>>;
-};
-
 type SignupFormData = {
   email: string;
   password: string;
   passwordConfirmation: string;
 };
 
-const Signup: FC<SignupProps> = ({
-  isLoggedIn,
-  setIsLoggedIn,
-  setIsOpenSnackbar,
-  setSnackbarMessage,
-  setSnackbarSeverity,
-}) => {
+const Signup: React.FC = () => {
+  const [isLoggedIn, setIsLoggedIn] = useGlobal('isLoggedIn');
+  const setIsOpenSnackbar = useGlobal('isOpenSnackbar')[1];
+  const setSnackbarSeverity = useGlobal('snackbarSeverity')[1];
+  const setSnackbarMessage = useGlobal('snackbarMessage')[1];
+
   const classes = useStyles();
 
   const history = useHistory();
@@ -113,114 +104,110 @@ const Signup: FC<SignupProps> = ({
 
   return (
     <React.Fragment>
-      {isLoggedIn ? (
-        <Redirect to={'/'} />
-      ) : (
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              新規登録
-            </Typography>
-            <form className={classes.form} noValidate onSubmit={handleSubmit(handleOnSubmit)}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email"
-                    name="email"
-                    autoComplete="email"
-                    inputRef={register({
-                      required: 'メールアドレスは必ず入力してください',
-                      pattern: {
-                        value: /^[\w+\-.]+@[a-z\d\-.]+\.[a-z]+$/,
-                        message: 'メールアドレスは正しい形式で入力してください',
-                      },
-                    })}
-                    error={!!errors.email}
-                    helperText={!!errors.email ? errors.email.message : ' '}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                    inputRef={register({
-                      required: 'パスワードは必ず入力してください',
-                      minLength: {
-                        value: 8,
-                        message: 'パスワードは8文字以上で入力してください',
-                      },
-                    })}
-                    error={!!errors.password}
-                    helperText={
-                      !!errors.password
-                        ? errors.password.message
-                        : 'パスワードは8文字以上で入力してください'
-                    }
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    name="passwordConfirmation"
-                    label="Password Confirmation"
-                    type="password"
-                    id="passwordConfirmation"
-                    autoComplete="current-password"
-                    inputRef={register({
-                      required: 'パスワード（確認）は必ず入力してください',
-                      minLength: {
-                        value: 8,
-                        message: 'パスワード（確認）は8文字以上で入力してください',
-                      },
-                    })}
-                    error={!!errors.passwordConfirmation}
-                    helperText={
-                      !!errors.passwordConfirmation
-                        ? errors.passwordConfirmation.message
-                        : 'パスワード（確認）は8文字以上で入力してください'
-                    }
-                  />
-                </Grid>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            新規登録
+          </Typography>
+          <form className={classes.form} noValidate onSubmit={handleSubmit(handleOnSubmit)}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  name="email"
+                  autoComplete="email"
+                  inputRef={register({
+                    required: 'メールアドレスは必ず入力してください',
+                    pattern: {
+                      value: /^[\w+\-.]+@[a-z\d\-.]+\.[a-z]+$/,
+                      message: 'メールアドレスは正しい形式で入力してください',
+                    },
+                  })}
+                  error={!!errors.email}
+                  helperText={!!errors.email ? errors.email.message : ' '}
+                />
               </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                Sign Up
-              </Button>
-              <Grid container justify="flex-end">
-                <Grid item>
-                  <Link href="#" variant="body2">
-                    Already have an account? Sign in
-                  </Link>
-                </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  inputRef={register({
+                    required: 'パスワードは必ず入力してください',
+                    minLength: {
+                      value: 8,
+                      message: 'パスワードは8文字以上で入力してください',
+                    },
+                  })}
+                  error={!!errors.password}
+                  helperText={
+                    !!errors.password
+                      ? errors.password.message
+                      : 'パスワードは8文字以上で入力してください'
+                  }
+                />
               </Grid>
-            </form>
-          </div>
-          <Box mt={5}>
-            <Copyright />
-          </Box>
-        </Container>
-      )}
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="passwordConfirmation"
+                  label="Password Confirmation"
+                  type="password"
+                  id="passwordConfirmation"
+                  autoComplete="current-password"
+                  inputRef={register({
+                    required: 'パスワード（確認）は必ず入力してください',
+                    minLength: {
+                      value: 8,
+                      message: 'パスワード（確認）は8文字以上で入力してください',
+                    },
+                  })}
+                  error={!!errors.passwordConfirmation}
+                  helperText={
+                    !!errors.passwordConfirmation
+                      ? errors.passwordConfirmation.message
+                      : 'パスワード（確認）は8文字以上で入力してください'
+                  }
+                />
+              </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign Up
+            </Button>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Link href="#" variant="body2">
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
+            </Grid>
+          </form>
+        </div>
+        <Box mt={5}>
+          <Copyright />
+        </Box>
+      </Container>
     </React.Fragment>
   );
 };

@@ -1,22 +1,22 @@
-import React, { FC, SyntheticEvent } from 'react';
+import React, { useGlobal } from 'reactn';
 import Snackbar, { SnackbarCloseReason } from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { SnackbarSeverity } from '../App';
+import { SnackbarSeverity } from '../constants';
 
 type alertProps = {
   severity: string;
-  onClose: (event: SyntheticEvent<any, Event>, reason: any) => void;
+  onClose: (event: React.SyntheticEvent<any, Event>, reason: any) => void;
   children: React.ReactNode;
 };
 
-type snackbarProps = {
-  isOpenSnackbar: boolean;
-  setIsOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
-  snackbarSeverity: SnackbarSeverity;
-  snackbarMessage: string;
-};
+// type snackbarProps = {
+//   isOpenSnackbar: boolean;
+//   setIsOpenSnackbar: React.Dispatch<React.SetStateAction<boolean>>;
+//   snackbarSeverity: SnackbarSeverity;
+//   snackbarMessage: string;
+// };
 
 function Alert<alertProps>(props: alertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -31,12 +31,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CustomizedSnackbar: FC<snackbarProps> = ({
-  isOpenSnackbar,
-  setIsOpenSnackbar,
-  snackbarSeverity,
-  snackbarMessage,
-}) => {
+const CustomizedSnackbar: React.FC = () => {
+  const [isOpenSnackbar, setIsOpenSnackbar] = useGlobal('isOpenSnackbar');
+  const snackbarSeverity = useGlobal('snackbarSeverity')[0];
+  const snackbarMessage = useGlobal('snackbarMessage')[0];
+
   const classes = useStyles();
   const handleClose = (event: React.SyntheticEvent<any, Event>, reason: SnackbarCloseReason) => {
     if (reason === 'clickaway') {
