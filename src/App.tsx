@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect } from 'react';
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import axios from 'axios';
 
-import Home from './pages/Home';
+import New from './pages/New';
 import Output from './pages/Output';
 import Login from './pages/Login';
 import SignUp from './pages/Signup';
@@ -91,8 +91,8 @@ const App: FC = () => {
           setSnackbarSeverity={setSnackbarSeverity}
           setSnackbarMessage={setSnackbarMessage}
         >
-          <Route path="/output" component={Output} exact />
-          <Route path="/" component={Home} exact />
+          <Route path="/" component={Output} exact />
+          <Route path="/new" component={New} exact />
         </Auth>
         <Redirect to="/" />
       </Switch>
