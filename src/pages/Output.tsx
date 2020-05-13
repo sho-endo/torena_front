@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import axios from 'axios';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
-// TODO: データをAPIから取得するように置き換える
-import { partWithMenus } from '../menuData';
 import OutputForm from '../components/OutputForm';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -26,14 +25,33 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+interface PartWithMenu {
+  id: number;
+  name: string;
+  menus: string[];
+}
+
 const Output = () => {
   const classes = useStyles();
 
   const [formCount, setFormCount] = useState(1);
+  const [partWithMenus, setPartWithMenus] = useState<PartWithMenu[]>([]);
 
   const handleClickAddBtn = () => {
     setFormCount(formCount + 1);
   };
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_API_HOST}/parts?include_menus=true`, { withCredentials: true })
+      .then((res) => {
+        setPartWithMenus(res.data);
+      })
+      .catch((err) => {
+        // TODO: エラーハンドリング
+        console.log(err);
+      });
+  }, []);
 
   return (
     <Container component="main" maxWidth="xs" className={classes.root}>
