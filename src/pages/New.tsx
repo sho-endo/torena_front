@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { apiClient } from '../lib/axios';
+import { SnackbarSeverity } from '../constants';
+import Snackbar from '../components/Snackbar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,6 +31,10 @@ type PartFormData = {
 };
 
 const New: FC = () => {
+  const [isOpenSnackbar, setIsOpenSnackbar] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState(SnackbarSeverity.SUCCESS);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
   const classes = useStyles();
 
   const { handleSubmit, register, errors, reset } = useForm<PartFormData>();
@@ -43,11 +49,14 @@ const New: FC = () => {
       .then((res) => {
         reset({ name: '' });
         // res.data.partで追加した部位の情報取れる
-
-        // TODO: snackBar表示させたい
+        setIsOpenSnackbar(true);
+        setSnackbarSeverity(SnackbarSeverity.SUCCESS);
+        setSnackbarMessage('部位を作成しました');
       })
       .catch((error) => {
-        // TODO: snackBar表示させたい
+        setIsOpenSnackbar(true);
+        setSnackbarSeverity(SnackbarSeverity.ERROR);
+        setSnackbarMessage('部位の作成に失敗しました');
       });
   };
 
@@ -86,6 +95,12 @@ const New: FC = () => {
           </Button>
         </form>
       </Typography>
+      <Snackbar
+        isOpenSnackbar={isOpenSnackbar}
+        setIsOpenSnackbar={setIsOpenSnackbar}
+        snackbarSeverity={snackbarSeverity}
+        snackbarMessage={snackbarMessage}
+      />
     </Container>
   );
 };
