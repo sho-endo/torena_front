@@ -10,7 +10,7 @@ import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 
-import { PartWithMenu } from '../pages/Output';
+import { PartWithMenu, Menu } from '../pages/Output';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,14 +46,14 @@ const OutputForm: FC<OutputFormProps> = ({ partWithMenus }) => {
   const [count, setCount] = useState(1);
   const [outputMenus, setOutputMenus] = useState<string[]>([]);
 
-  const randomSelect = (array: string[], num: number) => {
+  const randomSelect = (array: Menu[], num: number) => {
     // 元の配列を削除しないように複製する
     let copiedArray = [...array];
     let newArray = [];
 
     while (newArray.length < num && copiedArray.length > 0) {
       const rand = Math.floor(Math.random() * copiedArray.length);
-      newArray.push(copiedArray[rand]);
+      newArray.push(copiedArray[rand].name);
       copiedArray.splice(rand, 1);
     }
 

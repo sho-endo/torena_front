@@ -28,10 +28,15 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+export interface Menu {
+  id: number;
+  name: string;
+}
+
 export interface PartWithMenu {
   id: number;
   name: string;
-  menus: string[];
+  menus: Menu[];
 }
 
 const Output = () => {
