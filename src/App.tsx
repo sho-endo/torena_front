@@ -10,6 +10,7 @@ import Header from './components/Header';
 import Auth from './components/Auth';
 import Snackbar from './components/Snackbar';
 import Loading from './components/Loading';
+import Copyright from './components/Copyright';
 
 import { SnackbarSeverity } from './constants';
 
@@ -95,6 +96,7 @@ const App: FC = () => {
         snackbarSeverity={snackbarSeverity}
         snackbarMessage={snackbarMessage}
       />
+      <Copyright />
     </>
   );
 };
