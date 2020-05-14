@@ -42,7 +42,6 @@ const New: FC = () => {
 
   useEffect(() => {
     apiClient.get('/parts').then((res) => {
-      debugger;
       setParts(res.data);
       setIsLoading(false);
     });
