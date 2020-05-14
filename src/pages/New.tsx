@@ -133,7 +133,7 @@ const New: FC = () => {
   }
 
   return (
-    <Container component="main" maxWidth="md" className={classes.root}>
+    <Container component="main" maxWidth="xl" className={classes.root}>
       <CssBaseline />
       <Typography component="h2" variant="h4" align="center" className={classes.heading}>
         部位追加
