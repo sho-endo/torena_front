@@ -21,16 +21,25 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     partForm: {
       textAlign: 'center',
+      marginBottom: theme.spacing(10),
     },
     addPartBtn: {
       marginTop: theme.spacing(4.5),
       marginLeft: theme.spacing(3),
+    },
+    menuForm: {
+      textAlign: 'center',
     },
   })
 );
 
 type PartFormData = {
   name: string;
+};
+
+type MenuFormData = {
+  name: string;
+  id: string;
 };
 
 const New: FC = () => {
@@ -49,9 +58,11 @@ const New: FC = () => {
 
   const classes = useStyles();
 
+  // 分けて宣言しないと別フォームのバリデーションにならないので、一旦こうしている
   const { handleSubmit, register, errors, reset } = useForm<PartFormData>();
+  const menuForm = useForm<MenuFormData>();
 
-  const handleClickSubmitBtn = (data: PartFormData) => {
+  const handleClickAddPartBtn = (data: PartFormData) => {
     apiClient
       .post('/parts', {
         part: {
@@ -60,6 +71,27 @@ const New: FC = () => {
       })
       .then((res) => {
         reset({ name: '' });
+        setIsOpenSnackbar(true);
+        setSnackbarSeverity(SnackbarSeverity.SUCCESS);
+        setSnackbarMessage(res.data.message);
+      })
+      .catch((error) => {
+        setIsOpenSnackbar(true);
+        setSnackbarSeverity(SnackbarSeverity.ERROR);
+        setSnackbarMessage('部位の作成に失敗しました');
+      });
+  };
+
+  const handleClickAddMenuBtn = (data: MenuFormData) => {
+    const { id, name } = data;
+    apiClient
+      .post(`/parts/${id}/menus`, {
+        part: {
+          name: name,
+        },
+      })
+      .then((res) => {
+        menuForm.reset({ name: '' });
         setIsOpenSnackbar(true);
         setSnackbarSeverity(SnackbarSeverity.SUCCESS);
         setSnackbarMessage(res.data.message);
@@ -85,7 +117,7 @@ const New: FC = () => {
         className={classes.partForm}
         noValidate
         autoComplete="off"
-        onSubmit={handleSubmit(handleClickSubmitBtn)}
+        onSubmit={handleSubmit(handleClickAddPartBtn)}
       >
         <TextField
           variant="outlined"
@@ -104,6 +136,38 @@ const New: FC = () => {
           })}
           error={!!errors.name}
           helperText={!!errors.name && errors.name.message}
+        />
+        <Button type="submit" variant="contained" color="primary" className={classes.addPartBtn}>
+          追加
+        </Button>
+      </form>
+
+      <Typography component="h2" variant="h4" align="center" className={classes.heading}>
+        メニュー追加
+      </Typography>
+      <form
+        className={classes.menuForm}
+        noValidate
+        autoComplete="off"
+        onSubmit={menuForm.handleSubmit(handleClickAddMenuBtn)}
+      >
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          name="name"
+          label="部位名"
+          type="text"
+          id="name"
+          inputRef={menuForm.register({
+            required: 'メニュー名は必ず入力してください',
+            maxLength: {
+              value: 50,
+              message: 'メニュー名は50文字以内で入力してください',
+            },
+          })}
+          error={!!menuForm.errors.name}
+          helperText={!!menuForm.errors.name && menuForm.errors.name.message}
         />
         <Button type="submit" variant="contained" color="primary" className={classes.addPartBtn}>
           追加
