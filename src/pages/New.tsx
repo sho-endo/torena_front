@@ -95,6 +95,7 @@ const New: FC = () => {
       })
       .then((res) => {
         reset({ name: '' });
+        setParts([...parts, res.data.part]);
         setIsOpenSnackbar(true);
         setSnackbarSeverity(SnackbarSeverity.SUCCESS);
         setSnackbarMessage(res.data.message);
