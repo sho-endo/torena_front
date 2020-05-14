@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
     listRoot: {
       width: '100%',
       maxWidth: 360,
+      margin: 'auto',
       marginBottom: theme.spacing(8),
       backgroundColor: theme.palette.background.default,
     },
