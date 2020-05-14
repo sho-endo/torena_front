@@ -19,7 +19,9 @@ const useStyles = makeStyles((theme: Theme) =>
     heading: {
       marginBottom: theme.spacing(3),
     },
-    partForm: {},
+    partForm: {
+      textAlign: 'center',
+    },
     addPartBtn: {
       marginTop: theme.spacing(4.5),
       marginLeft: theme.spacing(3),
@@ -79,36 +81,35 @@ const New: FC = () => {
       <CssBaseline />
       <Typography component="h2" variant="h4" align="center" className={classes.heading}>
         部位追加
-        <form
-          className=""
-          noValidate
-          autoComplete="off"
-          onSubmit={handleSubmit(handleClickSubmitBtn)}
-        >
-          <TextField
-            className={classes.partForm}
-            variant="outlined"
-            margin="normal"
-            required
-            name="name"
-            label="部位名"
-            type="text"
-            id="name"
-            inputRef={register({
-              required: '部位名は必ず入力してください',
-              maxLength: {
-                value: 30,
-                message: '部位名は30文字以内で入力してください',
-              },
-            })}
-            error={!!errors.name}
-            helperText={!!errors.name && errors.name.message}
-          />
-          <Button type="submit" variant="contained" color="primary" className={classes.addPartBtn}>
-            追加
-          </Button>
-        </form>
       </Typography>
+      <form
+        className={classes.partForm}
+        noValidate
+        autoComplete="off"
+        onSubmit={handleSubmit(handleClickSubmitBtn)}
+      >
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          name="name"
+          label="部位名"
+          type="text"
+          id="name"
+          inputRef={register({
+            required: '部位名は必ず入力してください',
+            maxLength: {
+              value: 30,
+              message: '部位名は30文字以内で入力してください',
+            },
+          })}
+          error={!!errors.name}
+          helperText={!!errors.name && errors.name.message}
+        />
+        <Button type="submit" variant="contained" color="primary" className={classes.addPartBtn}>
+          追加
+        </Button>
+      </form>
       <Snackbar
         isOpenSnackbar={isOpenSnackbar}
         setIsOpenSnackbar={setIsOpenSnackbar}
