@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import { apiClient } from '../lib/axios';
 import { SnackbarSeverity } from '../constants';
 import Snackbar from '../components/Snackbar';
+import Loading from '../components/Loading';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,9 +32,19 @@ type PartFormData = {
 };
 
 const New: FC = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [parts, setParts] = useState([]);
   const [isOpenSnackbar, setIsOpenSnackbar] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState(SnackbarSeverity.SUCCESS);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  useEffect(() => {
+    apiClient.get('/parts').then((res) => {
+      debugger;
+      setParts(res.data);
+      setIsLoading(false);
+    });
+  }, []);
 
   const classes = useStyles();
 
@@ -48,10 +59,9 @@ const New: FC = () => {
       })
       .then((res) => {
         reset({ name: '' });
-        // res.data.partで追加した部位の情報取れる
         setIsOpenSnackbar(true);
         setSnackbarSeverity(SnackbarSeverity.SUCCESS);
-        setSnackbarMessage('部位を作成しました');
+        setSnackbarMessage(res.data.message);
       })
       .catch((error) => {
         setIsOpenSnackbar(true);
@@ -59,6 +69,10 @@ const New: FC = () => {
         setSnackbarMessage('部位の作成に失敗しました');
       });
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <Container component="main" maxWidth="xs" className={classes.root}>
