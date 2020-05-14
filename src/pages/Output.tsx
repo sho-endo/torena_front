@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme: Theme) =>
     heading: {
       marginBottom: theme.spacing(3),
     },
+    formWrapper: {
+      textAlign: 'center',
+    },
     addIcon: {
       fontSize: '50px',
       cursor: 'pointer',
@@ -54,19 +57,21 @@ const Output = () => {
   }, []);
 
   return (
-    <Container component="main" maxWidth="xs" className={classes.root}>
+    <Container component="main" maxWidth="xl" className={classes.root}>
       <CssBaseline />
       <Typography component="h1" variant="h4" align="center" className={classes.heading}>
         メニュー出力
       </Typography>
-      {[...Array(formCount)].map((_, i) => {
-        return <OutputForm key={i} partWithMenus={partWithMenus} />;
-      })}
-      <AddCircleIcon
-        color="primary"
-        className={classes.addIcon}
-        onClick={handleClickAddBtn}
-      ></AddCircleIcon>
+      <div className={classes.formWrapper}>
+        {[...Array(formCount)].map((_, i) => {
+          return <OutputForm key={i} partWithMenus={partWithMenus} />;
+        })}
+        <AddCircleIcon
+          color="primary"
+          className={classes.addIcon}
+          onClick={handleClickAddBtn}
+        ></AddCircleIcon>
+      </div>
     </Container>
   );
 };
