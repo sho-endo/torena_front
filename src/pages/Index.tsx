@@ -13,6 +13,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Grid from '@material-ui/core/Grid';
 
 import Loading from '../components/Loading';
 import { apiClient } from '../lib/axios';
@@ -20,14 +21,14 @@ import { apiClient } from '../lib/axios';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(5),
+      padding: theme.spacing(4),
     },
     heading: {
       marginBottom: theme.spacing(3),
     },
     listRoot: {
       width: '100%',
-      maxHeight: 300,
+      maxHeight: 400,
       maxWidth: 400,
       margin: 'auto',
       marginBottom: theme.spacing(10),
@@ -119,63 +120,67 @@ const Index: FC = () => {
   }
 
   return (
-    <Container component="main" maxWidth="xl" className={classes.root}>
+    <Grid container className={classes.root} spacing={4}>
       <CssBaseline />
-      <Typography component="h1" variant="h4" align="center" className={classes.heading}>
-        部位一覧
-      </Typography>
-      <List className={classes.listRoot}>
-        {parts.map((part, i) => {
-          return (
-            <ListItem divider={true} key={i}>
-              <ListItemText primary={part.name} />
-              <ListItemSecondaryAction
-                id={`${part.id}`}
-                onClick={(e) => handleCilckPartDeleteIcon(e)}
-              >
-                <IconButton edge="end" aria-label="delete">
-                  <DeleteIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-          );
-        })}
-      </List>
-      <Typography component="h1" variant="h4" align="center" className={classes.heading}>
-        メニュー一覧
-      </Typography>
-      <div className={classes.selectFormWrapper}>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel id="menu-select-label">部位</InputLabel>
-          <Select defaultValue="" onChange={(e) => handleChangeSelectMenu(e)}>
-            {parts.map((part) => {
-              return (
-                <MenuItem value={part.id} key={part.id}>
-                  {part.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
-      </div>
-      <List className={classes.listRoot}>
-        {menus.map((menu, i) => {
-          return (
-            <ListItem divider={true} key={i}>
-              <ListItemText primary={menu.name} />
-              <ListItemSecondaryAction
-                id={`${menu.id}`}
-                onClick={(e) => handleCilckMenuDeleteIcon(e)}
-              >
-                <IconButton edge="end" aria-label="delete">
-                  <DeleteIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-          );
-        })}
-      </List>
-    </Container>
+      <Grid item xs={12} sm={6}>
+        <Typography component="h1" variant="h4" align="center" className={classes.heading}>
+          部位一覧
+        </Typography>
+        <List className={classes.listRoot}>
+          {parts.map((part, i) => {
+            return (
+              <ListItem divider={true} key={i}>
+                <ListItemText primary={part.name} />
+                <ListItemSecondaryAction
+                  id={`${part.id}`}
+                  onClick={(e) => handleCilckPartDeleteIcon(e)}
+                >
+                  <IconButton edge="end" aria-label="delete">
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            );
+          })}
+        </List>
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <Typography component="h1" variant="h4" align="center" className={classes.heading}>
+          メニュー一覧
+        </Typography>
+        <div className={classes.selectFormWrapper}>
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel id="menu-select-label">部位</InputLabel>
+            <Select defaultValue="" onChange={(e) => handleChangeSelectMenu(e)}>
+              {parts.map((part) => {
+                return (
+                  <MenuItem value={part.id} key={part.id}>
+                    {part.name}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        </div>
+        <List className={classes.listRoot}>
+          {menus.map((menu, i) => {
+            return (
+              <ListItem divider={true} key={i}>
+                <ListItemText primary={menu.name} />
+                <ListItemSecondaryAction
+                  id={`${menu.id}`}
+                  onClick={(e) => handleCilckMenuDeleteIcon(e)}
+                >
+                  <IconButton edge="end" aria-label="delete">
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            );
+          })}
+        </List>
+      </Grid>
+    </Grid>
   );
 };
 
