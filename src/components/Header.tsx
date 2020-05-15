@@ -46,6 +46,11 @@ const Header: FC<HeaderProps> = ({ isLoggedIn, handleClickLogout }) => {
                 </Link>
               </Button>
               <Button color="inherit">
+                <Link to="/index" className={classes.text}>
+                  メニュー一覧
+                </Link>
+              </Button>
+              <Button color="inherit">
                 <Link to="/new" className={classes.text}>
                   メニュー追加
                 </Link>
