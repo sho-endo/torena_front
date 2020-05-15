@@ -191,6 +191,7 @@ const New: FC = () => {
               </Select>
             }
             name="partID"
+            defaultValue=""
             rules={{ required: '部位は必須です' }}
             control={menuForm.control}
           />
