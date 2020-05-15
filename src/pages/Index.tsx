@@ -67,6 +67,7 @@ const Index: FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [partWithMenus, setPartWithMenus] = useState<PartWithMenu[]>([]);
   const [menus, setMenus] = useState<Menu[]>([]);
+  const [targetPartId, setTargetPartId] = useState<unknown>('');
 
   useEffect(() => {
     apiClient
@@ -98,12 +99,15 @@ const Index: FC = () => {
     apiClient
       .delete(`/parts/${partId}`)
       .then((res) => {
-        console.log('deleted!!!!');
+        // メニュー一覧で選択中の部位を削除した場合はメニューをリセットする
+        if (parseInt(partId) === targetPartId) {
+          setTargetPartId('');
+          setMenus([]);
+        }
 
-        const coppiedParts = [...partWithMenus];
-        coppiedParts.splice(indexNum, 1);
-
-        setPartWithMenus(coppiedParts);
+        const newParts = [...partWithMenus];
+        newParts.splice(indexNum, 1);
+        setPartWithMenus(newParts);
 
         // TODO: snackBarの表示
       })
@@ -127,11 +131,28 @@ const Index: FC = () => {
       return;
     }
 
+    setTargetPartId(e.target.value);
     setMenus(targetPart.menus);
   };
 
   const handleCilckMenuDeleteIcon = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    console.log(e.currentTarget.id);
+    const menuId = e.currentTarget.id;
+    const indexNum = (e.currentTarget.dataset.index as unknown) as number;
+
+    apiClient
+      .delete(`/parts/${targetPartId}/menus/${menuId}`)
+      .then((res) => {
+        const newMenus = [...menus];
+        newMenus.splice(indexNum, 1);
+        setMenus(newMenus);
+
+        // TODO: snackBarの表示
+      })
+      .catch((error) => {
+        console.log(error);
+
+        // TODO: snackBarの表示
+      });
   };
 
   if (isLoading) {
@@ -171,7 +192,7 @@ const Index: FC = () => {
         <div className={classes.selectFormWrapper}>
           <FormControl variant="outlined" className={classes.formControl}>
             <InputLabel id="menu-select-label">部位</InputLabel>
-            <Select defaultValue="" onChange={(e) => handleChangeSelectMenu(e)}>
+            <Select value={targetPartId} onChange={(e) => handleChangeSelectMenu(e)}>
               {parts.map((part) => {
                 return (
                   <MenuItem value={part.id} key={part.id}>
@@ -189,6 +210,7 @@ const Index: FC = () => {
                 <ListItemText primary={menu.name} />
                 <ListItemSecondaryAction
                   id={`${menu.id}`}
+                  data-index={i}
                   onClick={(e) => handleCilckMenuDeleteIcon(e)}
                 >
                   <IconButton edge="end" aria-label="delete">
