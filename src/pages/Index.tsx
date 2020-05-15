@@ -91,7 +91,26 @@ const Index: FC = () => {
   });
 
   const handleCilckPartDeleteIcon = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    console.log(e.currentTarget.id);
+    e.persist();
+    const partId = e.currentTarget.id;
+    const indexNum = (e.currentTarget.dataset.index as unknown) as number;
+
+    apiClient
+      .delete(`/parts/${partId}`)
+      .then((res) => {
+        console.log('deleted!!!!');
+
+        const coppiedParts = [...partWithMenus];
+        coppiedParts.splice(indexNum, 1);
+
+        setPartWithMenus(coppiedParts);
+
+        // TODO: snackBarの表示
+      })
+      .catch((error) => {
+        console.log(error);
+        // TODO: snackBarの表示
+      });
   };
 
   const handleChangeSelectMenu = (
@@ -133,6 +152,7 @@ const Index: FC = () => {
                 <ListItemText primary={part.name} />
                 <ListItemSecondaryAction
                   id={`${part.id}`}
+                  data-index={i}
                   onClick={(e) => handleCilckPartDeleteIcon(e)}
                 >
                   <IconButton edge="end" aria-label="delete">
