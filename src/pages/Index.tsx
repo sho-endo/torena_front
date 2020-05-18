@@ -14,6 +14,8 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Grid from '@material-ui/core/Grid';
 
+import { SnackbarSeverity } from '../constants';
+import Snackbar from '../components/Snackbar';
 import Loading from '../components/Loading';
 import { apiClient } from '../lib/axios';
 
@@ -64,6 +66,9 @@ const Index: FC = () => {
   const classes = useStyles();
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isOpenSnackbar, setIsOpenSnackbar] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState(SnackbarSeverity.SUCCESS);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const [partWithMenus, setPartWithMenus] = useState<PartWithMenu[]>([]);
   const [menus, setMenus] = useState<Menu[]>([]);
   const [targetPartId, setTargetPartId] = useState<unknown>('');
@@ -107,12 +112,14 @@ const Index: FC = () => {
         const newParts = [...partWithMenus];
         newParts.splice(indexNum, 1);
         setPartWithMenus(newParts);
-
-        // TODO: snackBarの表示
+        setIsOpenSnackbar(true);
+        setSnackbarSeverity(SnackbarSeverity.SUCCESS);
+        setSnackbarMessage(res.data.message);
       })
       .catch((error) => {
-        console.log(error);
-        // TODO: snackBarの表示
+        setIsOpenSnackbar(true);
+        setSnackbarSeverity(SnackbarSeverity.ERROR);
+        setSnackbarMessage('部位の削除に失敗しました');
       });
   };
 
@@ -145,12 +152,14 @@ const Index: FC = () => {
         newMenus.splice(indexNum, 1);
         setMenus(newMenus);
 
-        // TODO: snackBarの表示
+        setIsOpenSnackbar(true);
+        setSnackbarSeverity(SnackbarSeverity.SUCCESS);
+        setSnackbarMessage(res.data.message);
       })
       .catch((error) => {
-        console.log(error);
-
-        // TODO: snackBarの表示
+        setIsOpenSnackbar(true);
+        setSnackbarSeverity(SnackbarSeverity.ERROR);
+        setSnackbarMessage('メニューの削除に失敗しました');
       });
   };
 
@@ -230,6 +239,12 @@ const Index: FC = () => {
           })}
         </List>
       </Grid>
+      <Snackbar
+        isOpenSnackbar={isOpenSnackbar}
+        setIsOpenSnackbar={setIsOpenSnackbar}
+        snackbarSeverity={snackbarSeverity}
+        snackbarMessage={snackbarMessage}
+      />
     </Grid>
   );
 };
