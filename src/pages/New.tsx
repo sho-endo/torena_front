@@ -95,7 +95,7 @@ const New: FC = () => {
       })
       .then((res) => {
         reset({ name: '' });
-        setParts([...parts, res.data.part]);
+        setParts([res.data.part, ...parts]);
         setIsOpenSnackbar(true);
         setSnackbarSeverity(SnackbarSeverity.SUCCESS);
         setSnackbarMessage(res.data.message);
@@ -191,6 +191,7 @@ const New: FC = () => {
               </Select>
             }
             name="partID"
+            defaultValue=""
             rules={{ required: '部位は必須です' }}
             control={menuForm.control}
           />

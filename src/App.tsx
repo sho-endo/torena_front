@@ -6,6 +6,7 @@ import New from './pages/New';
 import Output from './pages/Output';
 import Login from './pages/Login';
 import SignUp from './pages/Signup';
+import Index from './pages/Index';
 import Header from './components/Header';
 import Auth from './components/Auth';
 import Snackbar from './components/Snackbar';
@@ -87,6 +88,7 @@ const App: FC = () => {
         >
           <Route path="/" component={Output} exact />
           <Route path="/new" component={New} exact />
+          <Route path="/index" component={Index} exact />
         </Auth>
         <Redirect to="/" />
       </Switch>
