@@ -3,7 +3,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
+import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import FormControl from '@material-ui/core/FormControl';
@@ -154,6 +154,10 @@ const Index: FC = () => {
       });
   };
 
+  const ListItemLink = (props: ListItemProps<'a', { button?: true }>) => {
+    return <ListItem button component="a" {...props} />;
+  };
+
   if (isLoading) {
     return <Loading />;
   }
@@ -205,7 +209,12 @@ const Index: FC = () => {
         <List className={classes.listRoot}>
           {menus.map((menu, i) => {
             return (
-              <ListItem divider={true} key={i}>
+              <ListItemLink
+                divider={true}
+                key={i}
+                href={`https://www.youtube.com/results?search_query=${menu.name}`}
+                target="_blank"
+              >
                 <ListItemText primary={menu.name} />
                 <ListItemSecondaryAction
                   id={`${menu.id}`}
@@ -216,7 +225,7 @@ const Index: FC = () => {
                     <DeleteIcon />
                   </IconButton>
                 </ListItemSecondaryAction>
-              </ListItem>
+              </ListItemLink>
             );
           })}
         </List>
