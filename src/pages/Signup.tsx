@@ -196,7 +196,7 @@ const Signup: FC<SignupProps> = ({
                 color="primary"
                 className={classes.submit}
               >
-                Sign Up
+                新規登録
               </Button>
               <Grid container justify="center">
                 <Grid item>
